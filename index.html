@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek OCR Mappings</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { display: flex; gap: 20px; }
+        .sidebar { width: 300px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); height: fit-content; }
+        .main { flex: 1; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; overflow-x: auto; }
+        .image-container { position: relative; margin-bottom: 20px; border: 1px solid #ddd; }
+        img { display: block; max-width: 100%; height: auto; }
+        .highlight { position: absolute; border: 2px solid green; background: rgba(0, 255, 0, 0.2); pointer-events: none; }
+        .highlight.question { border-color: blue; background: rgba(0, 0, 255, 0.1); }
+        h2 { margin-top: 0; }
+        .q-item { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
+        .q-item:hover { background: #f9f9f9; }
+        .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .matched { background: #d4edda; color: #155724; }
+        .unmatched { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Assessment Mapping Visualization</h1>
+    <div id="status">Loading (or waiting for notebook to finish)...</div>
+    <div class="container" style="display:none" id="app">
+        <div class="sidebar">
+            <h2>Questions</h2>
+            <div id="q-list"></div>
+        </div>
+        <div class="main">
+            <h2>Pages</h2>
+            <div id="pages-container"></div>
+        </div>
+    </div>
+
+    <script>
+        async function init() {
+            try {
+                const res = await fetch('/deepseek_ocr2_assessment/exports/assessment_mapping.json');
+                if (!res.ok) throw new Error('assessment_mapping.json not found yet.');
+                const data = await res.json();
+                
+                document.getElementById('status').style.display = 'none';
+                document.getElementById('app').style.display = 'flex';
+
+                renderSidebar(data);
+                renderPages(data);
+            } catch (err) {
+                document.getElementById('status').innerHTML = `<span style="color:red">Status: ${err.message}. Please wait for the background notebook task to finish generating the JSON.</span>`;
+                // Retry every 5 seconds until it exists
+                setTimeout(init, 5000);
+            }
+        }
+
+        function renderSidebar(data) {
+            const list = document.getElementById('q-list');
+            list.innerHTML = '';
+            (data.questions || []).forEach(q => {
+                const isMatched = (data.mapping || []).some(m => m.question_id === q.id && m.answer_ids.length > 0);
+                const el = document.createElement('div');
+                el.className = 'q-item';
+                el.innerHTML = `
+                    <div><strong>Question ${q.id}</strong></div>
+                    <div style="font-size:12px; margin: 4px 0;">${q.text ? q.text.substring(0, 50) : ''}...</div>
+                    <span class="badge ${isMatched ? 'matched' : 'unmatched'}">${isMatched ? 'Matched' : 'Unmatched'}</span>
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        function renderPages(data) {
+            const container = document.getElementById('pages-container');
+            container.innerHTML = '';
+            
+            const pages = {};
+            (data.answers || []).forEach(ans => {
+                if (!pages[ans.page]) pages[ans.page] = [];
+                pages[ans.page].push(ans);
+            });
+
+            for (const [page, answers] of Object.entries(pages)) {
+                const wrap = document.createElement('div');
+                wrap.innerHTML = `<h3>Answer Page ${page}</h3>`;
+                
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'image-container';
+                
+                let imgPath = answers[0].image;
+                if (imgPath && imgPath.includes('/deepseek_ocr2_assessment/')) {
+                    imgPath = imgPath.substring(imgPath.indexOf('/deepseek_ocr2_assessment/'));
+                } else {
+                    // Fallback
+                    imgPath = `/deepseek_ocr2_assessment/pages/answers/Answer_Sheet_p${String(page).padStart(3, '0')}.png`;
+                }
+
+                const img = document.createElement('img');
+                img.src = imgPath;
+                
+                img.onload = () => {
+                    const scale = img.width / answers[0].page_width;
+                    
+                    answers.forEach(ans => {
+                        if(!ans.bbox_px) return;
+                        const box = document.createElement('div');
+                        box.className = 'highlight';
+                        const w = (ans.bbox_px[2] - ans.bbox_px[0]) * scale;
+                        const h = (ans.bbox_px[3] - ans.bbox_px[1]) * scale;
+                        const x = ans.bbox_px[0] * scale;
+                        const y = ans.bbox_px[1] * scale;
+                        
+                        box.style.left = `${x}px`;
+                        box.style.top = `${y}px`;
+                        box.style.width = `${w}px`;
+                        box.style.height = `${h}px`;
+                        
+                        box.innerHTML = `<span style="background:green;color:white;font-size:10px;padding:2px">${ans.region_id || ans.id}</span>`;
+                        imgContainer.appendChild(box);
+                    });
+                };
+
+                imgContainer.appendChild(img);
+                wrap.appendChild(imgContainer);
+                container.appendChild(wrap);
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

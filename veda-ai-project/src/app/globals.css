@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #303030;
+  --font-bricolage: "Bricolage Grotesque", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+
+  /* VedaAI design tokens (from Figma) */
+  --veda-orange: #ff5623;
+  --veda-orange-light: #ff7950;
+  --veda-orange-hover: #ff8d36;
+  --veda-dark: #303030;
+  --veda-dark-2: #2b2b2b;
+  --veda-muted: #5e5e5e;
+  --veda-disabled: #a9a9a9;
+  --veda-bg-off-white: #f6f6f6;
+  --veda-bg-off-white-2: #f0f0f0;
+  --veda-border: #cecece;
+
+  --veda-success: #34ac15;
+  --veda-success-bg: rgba(69, 181, 41, 0.1);
+  --veda-error: #c0350a;
+  --veda-error-bg: #ffe9e2;
+  --veda-warning: #e3600f;
+  --veda-warning-bg: rgba(255, 153, 0, 0.1);
+
+  --veda-highlight-bg: rgba(94, 255, 53, 0.1);
+  --veda-highlight-border: #3dd218;
+  --veda-highlight-tag: #34ac15;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-bricolage);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-bricolage);
+  letter-spacing: -0.02em;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #d8d8d8;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes veda-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.veda-pulse {
+  animation: veda-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes veda-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.veda-spin-slow {
+  animation: veda-spin-slow 2.4s linear infinite;
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out forwards;
+}
