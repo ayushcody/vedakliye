@@ -72,11 +72,11 @@ export default function TopBar() {
         </button>
 
         {isNotificationsOpen && (
-          <div className="absolute right-0 top-12 z-50 w-64 rounded-xl border border-black/5 bg-white p-4 shadow-lg">
+          <div className="absolute right-0 top-12 z-50 w-80 rounded-xl border border-black/5 bg-white p-4 shadow-lg">
             <div className="flex flex-col gap-2">
               <span className="text-sm font-bold text-[#303030]">New Notification</span>
               <p className="text-sm font-medium text-[#5e5e5e] leading-snug">
-                Send an email to Ayush Chougula(ayushchougula@gmail.com) for selection of next round!
+                Send an email to Ayush Chougula (ayushchougula@gmail.com) for selection of next round!
               </p>
             </div>
           </div>
