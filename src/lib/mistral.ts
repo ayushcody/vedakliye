@@ -97,13 +97,17 @@ export async function extractAndGradeMistral(
   ];
 
   content.push({ type: "text", text: "\n\nQUESTION PAPER PAGES (in order):" });
-  questionPaperPages.forEach((page, i) => {
+  const truncatedQuestions = questionPaperPages.slice(0, 4); // Max 4 question pages to leave room
+  truncatedQuestions.forEach((page, i) => {
     content.push({ type: "text", text: `\nQuestion paper — page ${i}:` });
     content.push({ type: "image_url", image_url: page });
   });
 
-  content.push({ type: "text", text: "\n\nSTUDENT ANSWER SHEET PAGES (in order, 0-indexed):" });
-  answerSheetPages.forEach((page, i) => {
+  const remainingSlots = 8 - truncatedQuestions.length;
+  const truncatedAnswers = answerSheetPages.slice(0, remainingSlots);
+
+  content.push({ type: "text", text: `\n\nSTUDENT ANSWER SHEET PAGES (in order, 0-indexed, showing first ${truncatedAnswers.length} pages due to API limits):` });
+  truncatedAnswers.forEach((page, i) => {
     content.push({ type: "text", text: `\nAnswer sheet — page ${i}:` });
     content.push({ type: "image_url", image_url: page });
   });
