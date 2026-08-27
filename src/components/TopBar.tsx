@@ -81,7 +81,7 @@ export default function TopBar() {
             <div className="flex flex-col gap-2">
               <span className="text-sm font-bold text-[#303030]">New Notification</span>
               <p className="text-sm font-medium text-[#5e5e5e] leading-snug">
-                Send an email to ayushchougula for selection of next round!
+                Send an email to Ayush Chougula(ayushchougula@gmail.com) for selection of next round!
               </p>
             </div>
           </div>
