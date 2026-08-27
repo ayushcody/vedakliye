@@ -229,9 +229,14 @@ export default function UploadScreen({ onStart }: UploadScreenProps) {
                 <path d="M5 12h14M13 6l6 6-6 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <p className="text-sm text-[#5e5e5e]/80">
-              Once both files are uploaded, you&rsquo;ll able to map answers with questions
-            </p>
+            <div className="flex flex-col items-center gap-1.5 text-center">
+              <p className="text-sm text-[#5e5e5e]/80">
+                Once both files are uploaded, you&rsquo;ll able to map answers with questions
+              </p>
+              <p className="text-[13px] text-[#5e5e5e]/50">
+                You can configure your own API keys in Settings.
+              </p>
+            </div>
           </div>
           </div>
         </div>
