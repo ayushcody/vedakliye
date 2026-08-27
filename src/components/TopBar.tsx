@@ -84,23 +84,27 @@ export default function TopBar() {
       </div>
 
 
-      <a 
-        href="https://ayushchougula.in" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        title="Visit my portfolio"
-        className="flex items-center gap-2 rounded-xl px-3 py-1.5 hover:bg-[#f0f0f0] transition-colors cursor-pointer"
-      >
-        <div className="flex size-8 items-center justify-center rounded-full bg-[#e5e5e5] text-sm font-semibold text-[#303030]">
-          A
+      <div className="relative group">
+        <a 
+          href="https://ayushchougula.in" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 rounded-xl px-3 py-1.5 hover:bg-[#f0f0f0] transition-colors cursor-pointer"
+        >
+          <div className="flex size-8 items-center justify-center rounded-full bg-[#e5e5e5] text-sm font-semibold text-[#303030]">
+            A
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="text-base font-semibold text-[#303030]">Ayush Chougula</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="#303030" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        </a>
+        <div className="pointer-events-none absolute -bottom-10 right-0 z-50 whitespace-nowrap rounded-lg bg-[#303030] px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100">
+          Visit my portfolio
         </div>
-        <div className="flex items-center gap-1">
-          <span className="text-base font-semibold text-[#303030]">Ayush Chougula</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M6 9l6 6 6-6" stroke="#303030" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-      </a>
+      </div>
       {isAboutOpen && <AboutModal onClose={() => setIsAboutOpen(false)} />}
     </div>
   );
