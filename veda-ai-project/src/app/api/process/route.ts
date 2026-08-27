@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { extractAndGrade } from "@/lib/gemini";
+import { extractAndGradeMistral } from "@/lib/mistral";
 import type { ProcessRequestBody } from "@/lib/types";
 
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as ProcessRequestBody;
+    const body = (await req.json()) as ProcessRequestBody & { engine?: "gemini" | "mistral" };
 
     if (
       !body.questionPaperPages?.length ||
@@ -18,10 +19,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = await extractAndGrade(
-      body.questionPaperPages,
-      body.answerSheetPages
-    );
+    let result;
+    if (body.engine === "mistral") {
+      result = await extractAndGradeMistral(
+        body.questionPaperPages,
+        body.answerSheetPages
+      );
+    } else {
+      result = await extractAndGrade(
+        body.questionPaperPages,
+        body.answerSheetPages
+      );
+    }
 
     return NextResponse.json(result);
   } catch (err) {

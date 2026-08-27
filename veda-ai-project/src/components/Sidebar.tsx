@@ -55,46 +55,78 @@ const icons = [
   },
 ];
 
+import { useState } from "react";
+import SettingsModal from "./SettingsModal";
+
 export default function Sidebar() {
+  const [activeTab, setActiveTab] = useState("Exams");
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
   return (
-    <div className="flex h-full w-16 flex-col items-center justify-between rounded-2xl bg-white px-6 py-3 shadow-[0px_16px_24px_rgba(0,0,0,0.12),0px_32px_24px_rgba(0,0,0,0.2)]">
-      <div className="flex flex-col items-center gap-14">
-        <div className="flex size-10 items-center justify-center rounded-xl bg-[#303030] text-white font-extrabold text-lg">
-          V
+    <div className="flex h-full w-[280px] shrink-0 flex-col justify-between rounded-[24px] bg-white px-6 py-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-[10px] shadow-sm overflow-hidden border border-black/5">
+            <img src="/logo.png" alt="VedaAI Logo" className="size-full object-cover" />
+          </div>
+          <span className="text-xl font-extrabold text-[#303030]">VedaAI</span>
         </div>
-        <div className="flex size-[42px] items-center justify-center rounded-full border-4 border-[#ff7950] bg-[#272727]">
+        
+        <button 
+          onClick={() => alert("AI Teacher's Toolkit is under construction!")}
+          className="flex w-full items-center justify-center gap-2 rounded-full border border-[#ff5623]/30 bg-[#2b2b2b] px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#1a1a1a] transition-colors"
+        >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2Z" fill="#ff7950" />
           </svg>
-        </div>
-        <div className="flex flex-col items-center gap-2">
+          AI Teacher's Toolkit
+        </button>
+
+        <div className="flex flex-col gap-1 mt-2">
           {icons.map((icon) => (
-            <div
+            <button
               key={icon.label}
               title={icon.label}
-              className={`flex items-center justify-center rounded-lg p-2 ${
-                icon.active ? "bg-[#f0f0f0] text-[#303030]" : "text-[#5e5e5e]/70"
+              onClick={() => setActiveTab(icon.label)}
+              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-all duration-200 ${
+                activeTab === icon.label ? "bg-[#f4f6f8] text-[#303030]" : "text-[#5e5e5e]/70 hover:bg-[#f4f6f8]/50 hover:text-[#303030]"
               }`}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 {icon.path}
               </svg>
-            </div>
+              <span>{icon.label}</span>
+            </button>
           ))}
         </div>
       </div>
-      <div className="flex flex-col items-center gap-2">
-        <div className="flex size-[46px] items-center justify-center rounded-2xl bg-[#f0f0f0] p-0.5">
-          <div className="flex size-full items-center justify-center rounded-xl bg-gradient-to-br from-[#ff8d36] to-[#ff5623] text-xs font-bold text-white">
-            DPS
+
+      <div className="flex flex-col gap-2">
+        <button 
+          onClick={() => setIsSettingsOpen(true)}
+          aria-label="Settings" 
+          className="flex items-center gap-3 rounded-xl px-4 py-3 font-semibold text-[#5e5e5e]/70 hover:bg-[#f4f6f8]/50 hover:text-[#303030] transition-all duration-200"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+          <span>Settings</span>
+        </button>
+
+        <div className="mt-2 flex items-center gap-3 rounded-2xl border border-black/5 bg-[#f4f6f8] p-3">
+          <div className="flex size-[42px] shrink-0 items-center justify-center rounded-xl bg-white p-0.5 shadow-sm">
+            <div className="flex size-full items-center justify-center rounded-lg bg-gradient-to-br from-[#ff8d36] to-[#ff5623] text-[9px] text-center font-bold text-white leading-tight">
+              MIT<br/>ADT
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-bold text-[#303030]">MIT ADT School of computing</span>
+            <span className="text-xs font-medium text-[#5e5e5e]/70">Last Year..</span>
           </div>
         </div>
-        <button aria-label="Expand sidebar" className="flex items-center justify-center p-2 text-[#5e5e5e]/70">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M7 6l6 6-6 6M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
       </div>
+      {isSettingsOpen && <SettingsModal onClose={() => setIsSettingsOpen(false)} />}
     </div>
   );
 }

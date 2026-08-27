@@ -16,33 +16,52 @@ export default function Home() {
   const [answerSheetPages, setAnswerSheetPages] = useState<PageImage[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  const [progressMessage, setProgressMessage] = useState<string>("");
+  const [progressPercentage, setProgressPercentage] = useState<number>(0);
+
   async function handleStart(questionPaper: File, answerSheet: File) {
     setView("processing");
     setError(null);
     try {
       setStepIndex(0);
+      setProgressMessage("Preparing pages...");
+      setProgressPercentage(2);
       const questionPages = await fileToPages(questionPaper);
       setStepIndex(1);
       const answerPages = await fileToPages(answerSheet);
       setAnswerSheetPages(answerPages);
-      setStepIndex(2);
+      setStepIndex(0);
+      setProgressMessage("Initializing AI engine...");
+      
+      const aiEngine = localStorage.getItem("ai_engine") || "gemini";
+      
+      // We simulate progress stages while the API call is in flight.
+      let currentStep = 0;
+      const progressInterval = setInterval(() => {
+        currentStep += 1;
+        if (currentStep <= 3) {
+           setStepIndex(currentStep);
+        }
+      }, 8000); // advance a step every 8 seconds
 
       const res = await fetch("/api/process", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          engine: aiEngine,
           questionPaperPages: questionPages.map((p) => p.dataUrl),
           answerSheetPages: answerPages.map((p) => p.dataUrl),
         }),
       });
 
-      setStepIndex(3);
+      clearInterval(progressInterval);
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || "Failed to process files.");
       }
 
+      setProgressPercentage(100);
       const data: ExtractionResult = await res.json();
       setResult(data);
       setView("mapping");
@@ -58,7 +77,7 @@ export default function Home() {
   }
 
   if (view === "processing") {
-    return <ProcessingScreen stepIndex={stepIndex} />;
+    return <ProcessingScreen stepIndex={stepIndex} progressMessage={progressMessage} progressPercentage={progressPercentage} />;
   }
 
   if (view === "error") {

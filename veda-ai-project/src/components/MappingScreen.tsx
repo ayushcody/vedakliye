@@ -49,78 +49,98 @@ export default function MappingScreen({ result, answerSheetPages }: MappingScree
   const unansweredCount = result.questions.filter((q) => q.status === "unanswered").length;
 
   return (
-    <div className="relative flex h-screen w-full gap-3 overflow-hidden bg-gradient-to-b from-[#eee] to-[#dadada] p-3">
-      <Sidebar />
-      <div className="flex min-w-0 flex-1 flex-col gap-3">
-        <TopBar />
+    <div className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#eef5fa] p-4 sm:p-6">
+      <div className="relative flex h-full w-full max-w-[1920px] gap-4 overflow-hidden rounded-[32px] bg-[#f4f6f8] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
+        <Sidebar />
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          <TopBar />
 
-        <div className="mx-auto flex w-full max-w-[1440px] flex-1 gap-3 overflow-hidden">
+          <div className="mx-auto flex w-full max-w-[1440px] flex-1 gap-4 overflow-hidden">
           {/* Left panel: extracted questions */}
-          <div className="flex w-[672px] shrink-0 flex-col gap-4 rounded-[20px] bg-white/50 p-4 h-full shadow-sm border border-black/[0.06]">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-base font-bold text-[#303030]">
-                Extracted Questions (from question paper)
+          <div className="flex w-[672px] shrink-0 flex-col gap-5 rounded-[24px] bg-white p-6 h-full shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <div className="flex items-center justify-between">
+              <p className="text-xl font-bold text-[#303030]">
+                Assessment Summary
               </p>
-              <p className="text-sm text-[#5e5e5e]">
-                Score: <span className="font-bold text-[#303030]">{result.totalScore}</span> /{" "}
-                {result.totalMaxMarks}
-                {unansweredCount > 0 && (
-                  <span className="ml-2 text-[#c0350a]">
-                    · {unansweredCount} unanswered
-                  </span>
-                )}
-              </p>
+              <button
+                onClick={handleExpandAll}
+                className="shrink-0 rounded-full bg-[#f4f6f8] px-5 py-2.5 text-sm font-semibold text-[#181818] hover:bg-[#e2e8f0] transition-colors"
+              >
+                {expandAll ? "Collapse All" : "Expand All"}
+              </button>
             </div>
-            <button
-              onClick={handleExpandAll}
-              className="shrink-0 rounded-full bg-white px-5 py-3 text-sm font-medium text-[#181818]"
-            >
-              {expandAll ? "Collapse All" : "Expand All"}
-            </button>
-          </div>
 
-          <div className="flex flex-col gap-4 overflow-y-auto pr-1" style={{ maxHeight: "calc(100vh - 220px)" }}>
-            {result.questions.map((q) => (
-              <QuestionCard
-                key={q.id}
-                question={q}
-                isSelected={selectedId === q.id}
-                isExpanded={expandedIds.has(q.id)}
-                onSelect={() => setSelectedId(q.id)}
-                onToggleExpand={() => toggleExpand(q.id)}
-              />
-            ))}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col items-center justify-center rounded-[20px] border border-black/5 bg-white p-5 shadow-sm">
+                <span className="text-4xl font-bold text-[#303030]">{result.totalScore}/{result.totalMaxMarks}</span>
+                <span className="mt-2 text-sm font-semibold text-[#5e5e5e]/80">Total Score</span>
+              </div>
+              <div className="flex flex-col items-center justify-center rounded-[20px] border border-black/5 bg-white p-5 shadow-sm">
+                <span className={`text-4xl font-bold ${Math.round((result.totalScore / (result.totalMaxMarks || 1)) * 100) >= 80 ? 'text-[#14b8a6]' : 'text-[#f59e0b]'}`}>
+                  {Math.round((result.totalScore / (result.totalMaxMarks || 1)) * 100)}%
+                </span>
+                <span className="mt-2 text-sm font-semibold text-[#5e5e5e]/80">Accuracy</span>
+              </div>
+              <div className="flex flex-col items-center justify-center rounded-[20px] border border-black/5 bg-white p-5 shadow-sm">
+                <span className={`text-4xl font-bold ${unansweredCount > 0 ? "text-[#ef4444]" : "text-[#14b8a6]"}`}>
+                  {unansweredCount}
+                </span>
+                <span className="mt-2 text-sm font-semibold text-[#5e5e5e]/80">Unanswered</span>
+              </div>
+              <div className="flex flex-col items-center justify-center rounded-[20px] border border-black/5 bg-white p-5 shadow-sm">
+                <span className="text-4xl font-bold text-[#303030]">{result.questions.length}</span>
+                <span className="mt-2 text-sm font-semibold text-[#5e5e5e]/80">Questions Found</span>
+              </div>
+            </div>
 
-            {result.orphanAnswers.length > 0 ? (
-              <div className="mt-2 flex flex-col gap-2">
-                <p className="px-1 text-sm font-bold text-[#5e5e5e]">
-                  Unmatched handwriting found on the sheet
-                </p>
-                {result.orphanAnswers.map((o) => (
-                  <button
-                    key={o.id}
-                    onClick={() =>
-                      setSelectedOrphanId(selectedOrphanId === o.id ? null : o.id)
-                    }
-                    className={`rounded-2xl border-2 bg-white p-3 text-left text-sm transition-all duration-200 ${
-                      selectedOrphanId === o.id ? "border-[#ff5623]" : "border-transparent hover:border-[#ff8d36]/50"
-                    }`}
-                  >
-                    <p className="font-semibold text-[#303030]">Page {o.page + 1}</p>
-                    <p className="text-[#5e5e5e]">{o.note}</p>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-2 rounded-2xl border border-black/[0.06] bg-white/60 p-4 text-center shadow-sm">
-                <p className="text-sm font-semibold text-[#5e5e5e]">
-                  No unmatched handwriting found — every answer was mapped cleanly.
-                </p>
-              </div>
-            )}
+            <div className="flex flex-col gap-4 overflow-y-auto pr-1" style={{ maxHeight: "calc(100vh - 420px)" }}>
+              {result.questions.map((q) => (
+                <QuestionCard
+                  key={q.id}
+                  question={q}
+                  isSelected={selectedId === q.id}
+                  isExpanded={expandedIds.has(q.id)}
+                  onSelect={() => setSelectedId(q.id)}
+                  onToggleExpand={() => toggleExpand(q.id)}
+                />
+              ))}
+
+              {result.orphanAnswers.length > 0 ? (
+                <div className="mt-4 flex flex-col gap-4 rounded-[20px] border border-black/5 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-bold text-[#303030]">Unmatched Handwriting</h3>
+                    <button className="rounded-full bg-[#ff5623]/10 px-4 py-1.5 text-xs font-bold text-[#ff5623] hover:bg-[#ff5623]/20 transition-colors">
+                      View All
+                    </button>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    {result.orphanAnswers.map((o, idx) => (
+                      <div key={o.id} className="flex flex-col gap-2">
+                        <button
+                          onClick={() => setSelectedOrphanId(selectedOrphanId === o.id ? null : o.id)}
+                          className={`flex items-start justify-between text-left text-sm transition-colors ${
+                            selectedOrphanId === o.id ? "text-[#ff5623] font-bold" : "text-[#5e5e5e] hover:text-[#303030]"
+                          }`}
+                        >
+                          <span className="pr-4">{idx + 1}. Page {o.page + 1} &mdash; {o.note}</span>
+                          <span className="shrink-0 text-xs font-bold">{Math.round(o.bbox.h * 100)}%</span>
+                        </button>
+                        <div className="h-1 w-full overflow-hidden rounded-full bg-black/5">
+                          <div className="h-full rounded-full bg-[#ff5623]" style={{ width: `${Math.round(o.bbox.h * 100)}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-2 rounded-[20px] border border-black/[0.06] bg-[#f4f6f8] p-5 text-center shadow-sm">
+                  <p className="text-sm font-semibold text-[#5e5e5e]">
+                    No unmatched handwriting found — every answer was mapped cleanly.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
         {/* Right panel: answer sheet viewer */}
         <AnswerSheetViewer
@@ -131,6 +151,8 @@ export default function MappingScreen({ result, answerSheetPages }: MappingScree
           selectedOrphanId={selectedOrphanId}
         />
       </div>
+      </div>
     </div>
-  );
+  </div>
+);
 }

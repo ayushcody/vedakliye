@@ -63,60 +63,60 @@ export default function AnswerSheetViewer({
   }
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden rounded-[20px] border-[1.25px] border-black/10 bg-white">
-      <div className="flex h-16 shrink-0 items-center justify-between border-b-[1.25px] border-black/10 bg-gradient-to-r from-[#303030] to-[#232323] px-6 py-3">
-        <p className="text-base font-bold text-white/80">Answer Sheet</p>
+    <div className="flex flex-1 flex-col overflow-hidden rounded-[24px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+      <div className="flex h-16 shrink-0 items-center justify-between border-b border-black/5 bg-white px-6 py-3">
+        <p className="text-lg font-bold text-[#303030]">Answer Sheet</p>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2">
+          <div className="flex items-center gap-2 rounded-xl bg-[#f4f6f8] px-3 py-2">
             <button
               aria-label="Zoom out"
               onClick={() => setZoom((z) => Math.max(50, z - 10))}
-              className="text-white"
+              className="text-[#303030] hover:text-black transition-colors"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12h14" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </button>
-            <span className="text-sm font-bold text-white">{zoom}%</span>
+            <span className="text-sm font-bold text-[#303030] min-w-[3ch] text-center">{zoom}%</span>
             <button
               aria-label="Zoom in"
               onClick={() => setZoom((z) => Math.min(200, z + 10))}
-              className="text-white"
+              className="text-[#303030] hover:text-black transition-colors"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M12 5v14M5 12h14" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </button>
           </div>
-          <div className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2">
+          <div className="flex items-center gap-2 rounded-xl bg-[#f4f6f8] px-3 py-2">
             <button
               aria-label="Previous page"
               disabled={pageIndex === 0}
               onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
-              className="text-white disabled:opacity-30"
+              className="text-[#303030] hover:text-black transition-colors disabled:opacity-30"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M15 18l-6-6 6-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <span className="text-sm font-bold text-white">
+            <span className="text-sm font-bold text-[#303030]">
               Page {pageIndex + 1} of {pages.length}
             </span>
             <button
               aria-label="Next page"
               disabled={pageIndex === pages.length - 1}
               onClick={() => setPageIndex((p) => Math.min(pages.length - 1, p + 1))}
-              className="text-white disabled:opacity-30"
+              className="text-[#303030] hover:text-black transition-colors disabled:opacity-30"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M9 6l6 6-6 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
           </div>
         </div>
       </div>
 
-      <div ref={containerRef} className="flex flex-1 items-start justify-center overflow-auto bg-[#e5e5e5] p-6">
+      <div ref={containerRef} className="flex flex-1 items-start justify-center overflow-auto bg-[#f4f6f8] p-6">
         <div
           className="relative shrink-0 transition-[width]"
           style={{ width: `${zoom}%`, maxWidth: "900px" }}

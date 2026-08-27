@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import TopBar from "./TopBar";
 import Sidebar from "./Sidebar";
 
@@ -62,7 +62,9 @@ function UploadSlot({
   }
 
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       onClick={() => inputRef.current?.click()}
       onDragOver={(e) => {
         e.preventDefault();
@@ -108,18 +110,29 @@ function UploadSlot({
           <p className="text-sm text-[#5e5e5e]/70">Max 10MB</p>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
 export default function UploadScreen({ onStart }: UploadScreenProps) {
   const [questionPaper, setQuestionPaper] = useState<File | null>(null);
   const [answerSheet, setAnswerSheet] = useState<File | null>(null);
+  const [aiEngine, setAiEngine] = useState<"gemini" | "mistral">("gemini");
+
+  useEffect(() => {
+    setAiEngine((localStorage.getItem("ai_engine") as "gemini" | "mistral") || "gemini");
+  }, []);
+
+  const handleEngineChange = (engine: "gemini" | "mistral") => {
+    setAiEngine(engine);
+    localStorage.setItem("ai_engine", engine);
+  };
 
   const canStart = !!questionPaper && !!answerSheet;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#f5f5f5] to-[#e9e5e5] p-3">
+    <div className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#eef5fa] p-4 sm:p-6">
+      <div className="relative flex h-full w-full max-w-[1920px] gap-4 overflow-hidden rounded-[32px] bg-[#f4f6f8] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
       <div
         className="pointer-events-none absolute h-[428px] w-[1318px] rounded-full opacity-40 blur-3xl"
         style={{ left: "calc(50% + 166px)", top: "calc(50% + 300px)", transform: "translate(-50%,-50%)", background: "radial-gradient(circle, #ffd8c2 0%, transparent 70%)" }}
@@ -129,16 +142,13 @@ export default function UploadScreen({ onStart }: UploadScreenProps) {
         style={{ left: "calc(50% + 158px)", top: "calc(50% + 500px)", transform: "translate(-50%,-50%)", background: "radial-gradient(circle, #ffd8c2 0%, transparent 70%)" }}
       />
 
-      <div className="relative z-10 flex items-start gap-3">
-        <Sidebar />
-        <div className="flex-1">
-          <TopBar />
-        </div>
-      </div>
+      <Sidebar />
+      <div className="flex min-w-0 flex-1 flex-col gap-4">
+        <TopBar />
 
-      <div className="relative z-10 flex min-h-[calc(100vh-100px)] items-center justify-center">
-        <div className="flex w-full max-w-[1103px] flex-col items-center gap-9 rounded-[40px] py-6">
-          <div className="flex flex-col items-center gap-5">
+        <div className="relative z-10 flex flex-1 items-center justify-center">
+          <div className="flex w-full max-w-[1103px] flex-col items-center gap-6 rounded-[40px] py-6">
+            <div className="flex flex-col items-center gap-4">
             <div className="flex flex-wrap items-center justify-center gap-3">
               <h1 className="text-4xl font-bold tracking-tight text-[#2b2b2b]">Upload</h1>
               <h1 className="rounded-lg bg-[#ff9350]/15 px-2 py-1 text-4xl font-bold tracking-tight text-[#ff5623]">
@@ -148,6 +158,34 @@ export default function UploadScreen({ onStart }: UploadScreenProps) {
             <p className="text-xl tracking-tight text-[#303030]">
               Upload both files to get started
             </p>
+
+            <div className="relative flex items-center rounded-full bg-white/60 p-1 shadow-sm border border-black/[0.04] w-fit mx-auto">
+              <div
+                className={`absolute left-1 top-1 h-[calc(100%-8px)] w-[124px] rounded-full bg-white shadow-sm transition-transform duration-300 ease-in-out border border-black/5 ${
+                  aiEngine === "gemini" ? "translate-x-0" : "translate-x-[124px]"
+                }`}
+              />
+              <button
+                onClick={() => handleEngineChange("gemini")}
+                className={`relative z-10 flex w-[124px] items-center justify-center gap-2 rounded-full py-2.5 text-sm font-bold transition-colors duration-300 ${
+                  aiEngine === "gemini" ? "text-[#303030]" : "text-[#5e5e5e] hover:text-[#303030]"
+                }`}
+              >
+                <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg" alt="Gemini" className="size-5" />
+                Gemini
+              </button>
+              <button
+                onClick={() => handleEngineChange("mistral")}
+                className={`relative z-10 flex w-[124px] items-center justify-center gap-2 rounded-full py-2.5 text-sm font-bold transition-colors duration-300 ${
+                  aiEngine === "mistral" ? "text-[#303030]" : "text-[#5e5e5e] hover:text-[#303030]"
+                }`}
+              >
+                <div className="flex size-5 items-center justify-center rounded-full bg-[#f66f00]">
+                  <span className="text-[10px] font-black text-white">M</span>
+                </div>
+                Mistral
+              </button>
+            </div>
 
             <div className="flex flex-col items-center gap-2 py-2">
               <div className="relative flex size-[110px] items-center justify-center rounded-full bg-gradient-to-br from-[#ffe3d2] to-[#ffcaa8]">
@@ -195,7 +233,9 @@ export default function UploadScreen({ onStart }: UploadScreenProps) {
               Once both files are uploaded, you&rsquo;ll able to map answers with questions
             </p>
           </div>
+          </div>
         </div>
+      </div>
       </div>
     </div>
   );
