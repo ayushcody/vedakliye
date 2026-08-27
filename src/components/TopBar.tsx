@@ -27,20 +27,18 @@ export default function TopBar() {
         
         <div className="h-4 w-px bg-black/10" />
         
-        <div className="flex items-center gap-1.5 rounded-full border border-black/5 bg-white px-2.5 py-1 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-          {engine === "gemini" ? (
-            <>
-              <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg" alt="Gemini" className="size-4" />
-              <span className="text-[11px] font-bold text-[#5e5e5e] uppercase tracking-wide">Powered by Gemini</span>
-            </>
-          ) : (
-            <>
-              <div className="flex size-4 items-center justify-center rounded-full bg-[#f66f00]">
-                <span className="text-[9px] font-black text-white">M</span>
-              </div>
-              <span className="text-[11px] font-bold text-[#5e5e5e] uppercase tracking-wide">Powered by Mistral</span>
-            </>
-          )}
+        <div className="flex items-center gap-2 rounded-full border border-black/5 bg-white px-2.5 py-1 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+          <div className="flex -space-x-1.5">
+            <div className="relative z-10 flex size-4 items-center justify-center rounded-full bg-white ring-1 ring-white">
+              <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg" alt="Gemini" className="size-3" />
+            </div>
+            <div className="relative z-0 flex size-4 items-center justify-center rounded-full bg-[#f66f00] ring-1 ring-white">
+              <span className="text-[8px] font-black text-white">M</span>
+            </div>
+          </div>
+          <span className="text-[11px] font-bold text-[#5e5e5e] uppercase tracking-wide">
+            Powered by Human Intelligence
+          </span>
         </div>
       </div>
       <button 
