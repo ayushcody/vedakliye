@@ -52,12 +52,7 @@ export default function TopBar() {
           <path d="M12 8h.01" />
         </svg>
       </button>
-      <div className="flex size-9 items-center justify-center rounded-full bg-[#f6f6f6]">
-        <span className="flex size-6 items-center justify-center rounded-full border-2 border-[#303030] text-sm font-bold text-[#303030]">
-          ?
-        </span>
-      </div>
-      
+
       <div className="relative">
         <button
           onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
@@ -88,20 +83,14 @@ export default function TopBar() {
         )}
       </div>
 
-      <button
-        onClick={() => alert("AI Assistant")}
-        aria-label="AI"
-        className="flex size-9 items-center justify-center rounded-full hover:bg-[#f6f6f6] transition-colors"
+
+      <a 
+        href="https://ayushchougula.in" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 rounded-xl px-3 py-1.5 hover:bg-[#f0f0f0] transition-colors cursor-pointer"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2Z"
-            fill="#303030"
-          />
-        </svg>
-      </button>
-      <div className="flex items-center gap-2 rounded-xl px-3 py-1.5">
-        <div className="flex size-8 items-center justify-center rounded-full bg-[#f6f6f6] text-sm font-semibold text-[#303030]">
+        <div className="flex size-8 items-center justify-center rounded-full bg-[#e5e5e5] text-sm font-semibold text-[#303030]">
           A
         </div>
         <div className="flex items-center gap-1">
@@ -110,7 +99,7 @@ export default function TopBar() {
             <path d="M6 9l6 6 6-6" stroke="#303030" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
-      </div>
+      </a>
       {isAboutOpen && <AboutModal onClose={() => setIsAboutOpen(false)} />}
     </div>
   );
