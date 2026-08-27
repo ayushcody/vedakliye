@@ -88,6 +88,7 @@ export default function TopBar() {
         href="https://ayushchougula.in" 
         target="_blank" 
         rel="noopener noreferrer"
+        title="Visit my portfolio"
         className="flex items-center gap-2 rounded-xl px-3 py-1.5 hover:bg-[#f0f0f0] transition-colors cursor-pointer"
       >
         <div className="flex size-8 items-center justify-center rounded-full bg-[#e5e5e5] text-sm font-semibold text-[#303030]">
