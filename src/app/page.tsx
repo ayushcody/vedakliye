@@ -30,13 +30,13 @@ export default function Home() {
       setStepIndex(1);
       const answerPages = await fileToPages(answerSheet);
       setAnswerSheetPages(answerPages);
-      setStepIndex(0);
+      setStepIndex(2);
       setProgressMessage("Initializing AI engine...");
       
       const aiEngine = localStorage.getItem("ai_engine") || "gemini";
       
       // We simulate progress stages while the API call is in flight.
-      let currentStep = 0;
+      let currentStep = 2;
       const progressInterval = setInterval(() => {
         currentStep += 1;
         if (currentStep <= 3) {

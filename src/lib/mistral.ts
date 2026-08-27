@@ -1,6 +1,6 @@
 import type { ExtractionResult } from "./types";
 
-const MODEL_NAME = "mistral-ocr-latest"; // Best vision model from Mistral
+const MODEL_NAME = "pixtral-12b-2409"; // Best vision model from Mistral
 
 const SYSTEM_PROMPT = `You are an expert teaching assistant AI helping a teacher grade a student's handwritten exam.
 
