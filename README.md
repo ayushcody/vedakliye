@@ -1,3 +1,5 @@
+# Submission by Ayush Chougula
+
 # Veda AI: Automated Assessment Extraction & Answer Mapping
 
 **Veda AI** is an intelligent grading and evaluation platform designed specifically for educators, universities, and examination boards. It automatically ingests handwritten or printed Question Papers and Student Answer Sheets, extracts each question with its subparts, accurately maps handwritten responses across multi-page sheets with pixel-tight bounding boxes, transcribes answers, grades them against expected rubric criteria, and provides detailed pedagogical feedback.
