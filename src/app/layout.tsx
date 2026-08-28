@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: "VedaAI — Assessment Extraction & Answer Mapping",
   description:
     "Upload a question paper and a student's answer sheet to extract, map, highlight, and grade answers automatically.",
+  icons: {
+    icon: "/vedaAI.png",
+    shortcut: "/vedaAI.png",
+    apple: "/vedaAI.png",
+  },
 };
 
 export default function RootLayout({
