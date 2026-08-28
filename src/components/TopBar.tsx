@@ -2,7 +2,11 @@
 import { useState, useEffect } from "react";
 import AboutModal from "./AboutModal";
 
-export default function TopBar() {
+interface TopBarProps {
+  processingDurationMs?: number;
+}
+
+export default function TopBar({ processingDurationMs }: TopBarProps = {}) {
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [engine, setEngine] = useState("gemini");
@@ -11,10 +15,18 @@ export default function TopBar() {
     setEngine(localStorage.getItem("ai_engine") || "gemini");
   }, []);
 
+  const formatDuration = (ms?: number) => {
+    if (!ms) return null;
+    if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
+    const mins = Math.floor(ms / 60000);
+    const secs = Math.round((ms % 60000) / 1000);
+    return `${mins}m ${secs}s`;
+  };
+
   return (
     <div className="flex h-14 items-center gap-3 rounded-2xl bg-transparent pl-4 pr-2">
 
-      <div className="flex flex-1 items-center gap-4">
+      <div className="flex flex-1 items-center gap-3">
         <div className="flex items-center gap-2">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#a9a9a9]">
             <rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.6" />
@@ -40,6 +52,18 @@ export default function TopBar() {
             Powered by Human Intelligence
           </span>
         </div>
+
+        {processingDurationMs ? (
+          <div className="flex items-center gap-1.5 rounded-full border border-black/5 bg-white px-3 py-1 text-xs font-bold text-[#303030] shadow-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff5623" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span>
+              Processing Time: <span className="font-mono text-[#ff5623]">{formatDuration(processingDurationMs)}</span>
+            </span>
+          </div>
+        ) : null}
       </div>
       <button 
         onClick={() => setIsAboutOpen(true)}

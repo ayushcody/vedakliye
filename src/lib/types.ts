@@ -21,6 +21,16 @@ export interface AnswerRegion {
   /** which answer-sheet page (0-indexed) this region is on */
   page: number;
   bbox: BoundingBox;
+  
+  // Mapping and Segmentation metadata
+  rawLabel?: string | null;
+  normalizedLabel?: string | null;
+  isContinuation?: boolean;
+  resolvedQuestionId?: string | null;
+  resolutionMethod?: string;
+  blockIds?: string[];
+  mappingConfidence?: string;
+  note?: string;
 }
 
 export type QuestionStatus = "answered" | "unanswered" | "partially_answered";
@@ -32,6 +42,7 @@ export interface GradedQuestion {
   number: string;
   /** sub-part label if any, e.g. "a" */
   subpart?: string;
+  extractedLabel?: string | null;
   text: string;
   maxMarks: number;
   status: QuestionStatus;
@@ -56,6 +67,7 @@ export interface ExtractionResult {
   totalScore: number;
   totalMaxMarks: number;
   summary: string;
+  ocrBlocks?: Record<string, BoundingBox>;
 }
 
 export interface ProcessRequestBody {

@@ -1,41 +1,64 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { extractAndGrade } from "@/lib/gemini";
 import { extractAndGradeMistral } from "@/lib/mistral";
 import type { ProcessRequestBody } from "@/lib/types";
 
-export const maxDuration = 60;
+export const maxDuration = 900;
 
 export async function POST(req: NextRequest) {
-  try {
-    const body = (await req.json()) as ProcessRequestBody & { engine?: "gemini" | "mistral" };
+  const encoder = new TextEncoder();
+  
+  const stream = new ReadableStream({
+    async start(controller) {
+      function reportProgress(stepIndex: number, message: string) {
+        controller.enqueue(
+          encoder.encode(JSON.stringify({ type: "progress", stepIndex, message }) + "\n")
+        );
+      }
 
-    if (
-      !body.questionPaperPages?.length ||
-      !body.answerSheetPages?.length
-    ) {
-      return NextResponse.json(
-        { error: "Both questionPaperPages and answerSheetPages are required." },
-        { status: 400 }
-      );
+      try {
+        const body = (await req.json()) as ProcessRequestBody & { engine?: "gemini" | "mistral" };
+
+        if (!body.questionPaperPages?.length || !body.answerSheetPages?.length) {
+          throw new Error("Both questionPaperPages and answerSheetPages are required.");
+        }
+
+        let result;
+        if (body.engine === "mistral") {
+          result = await extractAndGradeMistral(
+            body.questionPaperPages,
+            body.answerSheetPages,
+            reportProgress
+          );
+        } else {
+          // gemini doesn't have onProgress yet, just call it
+          reportProgress(0, "Initializing Gemini engine...");
+          result = await extractAndGrade(
+            body.questionPaperPages,
+            body.answerSheetPages
+          );
+        }
+
+        controller.enqueue(
+          encoder.encode(JSON.stringify({ type: "result", data: result }) + "\n")
+        );
+        controller.close();
+      } catch (err) {
+        console.error("Processing error:", err);
+        const message = err instanceof Error ? err.message : "Unknown error";
+        controller.enqueue(
+          encoder.encode(JSON.stringify({ type: "error", error: message }) + "\n")
+        );
+        controller.close();
+      }
     }
+  });
 
-    let result;
-    if (body.engine === "mistral") {
-      result = await extractAndGradeMistral(
-        body.questionPaperPages,
-        body.answerSheetPages
-      );
-    } else {
-      result = await extractAndGrade(
-        body.questionPaperPages,
-        body.answerSheetPages
-      );
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "application/x-ndjson",
+      "Cache-Control": "no-cache",
+      "Connection": "keep-alive"
     }
-
-    return NextResponse.json(result);
-  } catch (err) {
-    console.error("Processing error:", err);
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
+  });
 }

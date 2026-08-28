@@ -100,6 +100,8 @@ BOUNDING BOX RULES — read carefully, this is the most important part of your j
 - Exclude from every box: page headers/footers, subject/roll-number lines, ruled margins, the printed or handwritten question text, the printed question-number tag itself if it is a separate printed label, and any blank space beyond the last line of ink.
 - If a single question's answer is broken up on the page by something else in between (a diagram for a different question, a page break, a section divider), split it into multiple smaller regions rather than one box that swallows everything in between.
 - Bounding boxes must be given as ymin, xmin, ymax, xmax on a 0-1000 normalized scale relative to that specific page image (top-left is 0,0). Re-check each box before finalizing: if it touches all four edges of the page, it is almost certainly wrong — go back and tighten it to the actual ink.
+- INCLUDE ALL PARAGRAPHS AND EXPLANATIONS: A student's answer to a question (e.g. Q1A) often spans multiple paragraphs, application examples, bullet points, derivations, or diagrams. The answer region MUST extend across ALL paragraphs and lines belonging to that question until the next question header (e.g. 'Q1 B') begins. NEVER cut off the answer after the first paragraph or opening definition. The bounding box and transcribedAnswer must encompass the entire response (Paragraph 1, 2, 3, etc.).
+- PREVENT CHARACTER CLIPPING: When computing each box's edges, err very slightly on the side of generous rather than exact — the box must fully contain every character's ink, including ascenders, descenders, and the leftmost/rightmost stroke of the first and last character on each line. A box that clips even a single character (e.g. rendering 'learn' as 'earn' by cutting off the 'l') is a real error, even if it's only 2-3 pixels of clipping. When in doubt about an edge, expand it outward by a few pixels rather than fitting exactly to the visible ink boundary.
 
 STEP 3 — Handle edge cases explicitly:
 - If a question was answered out of order (e.g. answered later on the sheet), still map it correctly to that question.
@@ -195,6 +197,96 @@ export async function extractAndGrade(
     throw new Error("Gemini returned invalid JSON. Try again.");
   }
 
+  // Pass 2: Verify & correct geometry for pages with 2+ regions
+  const pageRegionsMap = new Map<number, { questionId: string; regionIdx: number; ymin: number; xmin: number; ymax: number; xmax: number }[]>();
+  raw.questions.forEach((q) => {
+    (q.regions || []).forEach((r, rIdx) => {
+      if (!pageRegionsMap.has(r.page)) {
+        pageRegionsMap.set(r.page, []);
+      }
+      pageRegionsMap.get(r.page)!.push({
+        questionId: q.id,
+        regionIdx: rIdx,
+        ymin: r.ymin,
+        xmin: r.xmin,
+        ymax: r.ymax,
+        xmax: r.xmax,
+      });
+    });
+  });
+
+  const multiRegionPages = Array.from(pageRegionsMap.entries()).filter(
+    ([p, regions]) => regions.length >= 2 && answerSheetPages[p]
+  );
+
+  if (multiRegionPages.length > 0) {
+    try {
+      const verifyResults = await Promise.all(
+        multiRegionPages.map(async ([pIndex, proposed]) => {
+          const verifyModel = genAI.getGenerativeModel({
+            model: MODEL_NAME,
+            generationConfig: {
+              responseMimeType: "application/json",
+              temperature: 0.1,
+            },
+          });
+
+          const prompt = `Here is a page image and a set of proposed bounding boxes for the questions on it. Your only job is to verify and correct the geometry of each box.
+For each box:
+(1) does its top edge start exactly at the first ink pixel of that question's answer, not touching any heading or the previous question's last line?
+(2) does its bottom edge stop exactly at the last ink pixel, not into blank space or the next question's first line?
+(3) do any two boxes overlap — if so, split the boundary evenly or reassign the disputed line to whichever question it visually belongs to?
+(4) PREVENT CLIPPING: When computing each box's edges, err very slightly on the side of generous rather than exact — the box must fully contain every character's ink, including ascenders, descenders, and the leftmost/rightmost stroke of the first and last character on each line.
+(5) COMPLETE MULTI-PARAGRAPH COVERAGE: Does the box cover ALL paragraphs/lines for that question up until the next question's header? If an answer has multiple paragraphs before the next question starts (e.g. Q1A contains both the definition and application examples), the box MUST extend to the bottom of the last paragraph of that answer, not stop prematurely after paragraph 1.
+
+Return only the corrected coordinates (0-1000 scale: ymin, xmin, ymax, xmax), in the same format, adjusting only what's wrong — most boxes may already be correct and should be returned unchanged.
+
+Proposed boxes on Answer Sheet Page ${pIndex + 1}:
+${JSON.stringify(proposed, null, 2)}
+
+Return JSON matching:
+{
+  "correctedRegions": [
+    {
+      "questionId": "string",
+      "regionIdx": 0,
+      "ymin": 0,
+      "xmin": 0,
+      "ymax": 0,
+      "xmax": 0
+    }
+  ]
+}`;
+          const inlinePart = dataUrlToInlinePart(answerSheetPages[pIndex]);
+          const verifyRes = await verifyModel.generateContent([prompt, inlinePart]);
+          const verifyText = verifyRes.response.text();
+          const parsed = JSON.parse(verifyText);
+          return { pIndex, corrections: parsed.correctedRegions || [] };
+        })
+      );
+
+      // Merge Pass 2 corrections back into raw.questions
+      verifyResults.forEach(({ corrections }) => {
+        corrections.forEach((c: any) => {
+          const targetQ = raw.questions.find((q) => q.id === c.questionId);
+          if (targetQ && targetQ.regions && targetQ.regions[c.regionIdx]) {
+            if (typeof c.ymin === 'number' && typeof c.xmin === 'number' && typeof c.ymax === 'number' && typeof c.xmax === 'number') {
+              targetQ.regions[c.regionIdx] = {
+                page: targetQ.regions[c.regionIdx].page,
+                ymin: c.ymin,
+                xmin: c.xmin,
+                ymax: c.ymax,
+                xmax: c.xmax,
+              };
+            }
+          }
+        });
+      });
+    } catch (verifyErr) {
+      console.warn("Pass 2 verification warning (fell back to Pass 1 boxes):", verifyErr);
+    }
+  }
+
   const toBbox = (b: { ymin: number; xmin: number; ymax: number; xmax: number }) => ({
     x: b.xmin / 1000,
     y: b.ymin / 1000,
@@ -202,7 +294,18 @@ export async function extractAndGrade(
     h: (b.ymax - b.ymin) / 1000,
   });
 
-  const questions = raw.questions.map((q) => ({
+  const allRawIds = raw.questions.map((q) => q.id);
+  const deduplicatedRawQuestions = raw.questions.filter((q) => {
+    const hasSubparts = allRawIds.some(
+      (otherId) =>
+        otherId !== q.id &&
+        otherId.toLowerCase().startsWith(q.id.toLowerCase()) &&
+        /[a-z]/i.test(otherId.slice(q.id.length))
+    );
+    return !hasSubparts;
+  });
+
+  const questions = deduplicatedRawQuestions.map((q) => ({
     id: q.id,
     number: q.number,
     subpart: q.subpart || undefined,

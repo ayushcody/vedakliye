@@ -55,12 +55,24 @@ const icons = [
   },
 ];
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SettingsModal from "./SettingsModal";
+import ModelComparisonModal from "./ModelComparisonModal";
 
 export default function Sidebar() {
   const [activeTab, setActiveTab] = useState("Exams");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isModelModalOpen, setIsModelModalOpen] = useState(false);
+  const [aiEngine, setAiEngine] = useState<"gemini" | "mistral">("gemini");
+
+  useEffect(() => {
+    const updateEngine = () => {
+      setAiEngine((localStorage.getItem("ai_engine") as "gemini" | "mistral") || "gemini");
+    };
+    updateEngine();
+    window.addEventListener("storage", updateEngine);
+    return () => window.removeEventListener("storage", updateEngine);
+  }, []);
 
   return (
     <div className="flex h-full w-[280px] shrink-0 flex-col justify-between rounded-[24px] bg-white px-6 py-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
@@ -98,6 +110,27 @@ export default function Sidebar() {
               <span>{icon.label}</span>
             </button>
           ))}
+
+          {/* Model Selection Option */}
+          <button
+            onClick={() => setIsModelModalOpen(true)}
+            title="Model Selection & Comparison"
+            className="flex w-full items-center justify-between rounded-xl px-4 py-3 font-semibold text-[#5e5e5e]/70 hover:bg-[#f4f6f8]/50 hover:text-[#303030] transition-all duration-200 group"
+          >
+            <div className="flex items-center gap-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-current">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Model Selection</span>
+            </div>
+            <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase transition-colors ${
+              aiEngine === "gemini" 
+                ? "bg-[#ff5623]/10 text-[#ff5623]" 
+                : "bg-[#f66f00]/10 text-[#f66f00]"
+            }`}>
+              {aiEngine === "gemini" ? "Gemini" : "Mistral"}
+            </span>
+          </button>
         </div>
       </div>
 
@@ -116,17 +149,23 @@ export default function Sidebar() {
 
         <div className="mt-2 flex items-center gap-3 rounded-2xl border border-black/5 bg-[#f4f6f8] p-3">
           <div className="flex size-[42px] shrink-0 items-center justify-center rounded-xl bg-white p-0.5 shadow-sm">
-            <div className="flex size-full items-center justify-center rounded-lg bg-gradient-to-br from-[#ff8d36] to-[#ff5623] text-[9px] text-center font-bold text-white leading-tight">
-              MIT<br/>ADT
+            <div className="flex size-full items-center justify-center rounded-lg bg-gradient-to-br from-[#ff8d36] to-[#ff5623] text-[10px] text-center font-black text-white leading-tight">
+              CSE
             </div>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-bold text-[#303030]">MIT ADT School of computing</span>
-            <span className="text-xs font-medium text-[#5e5e5e]/70">Last Year..</span>
+            <span className="text-sm font-bold text-[#303030]">Computer Science & Eng.</span>
+            <span className="text-xs font-medium text-[#5e5e5e]/70">Semester 8 · Final Year</span>
           </div>
         </div>
       </div>
       {isSettingsOpen && <SettingsModal onClose={() => setIsSettingsOpen(false)} />}
+      {isModelModalOpen && (
+        <ModelComparisonModal
+          onClose={() => setIsModelModalOpen(false)}
+          onSelectEngine={(engine) => setAiEngine(engine)}
+        />
+      )}
     </div>
   );
 }

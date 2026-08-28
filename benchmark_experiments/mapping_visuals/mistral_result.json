@@ -1,0 +1,569 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "number": "1",
+      "extractedLabel": "Q1 (cont.)",
+      "text": "Explain **Reinforcement Learning** in detail. An autonomous car uses reinforcement learning to navigate. Describe the **reward** and **environment** components in this application.\n\nWhy is proper data pre-processing, including feature transformations, essential before training a machine learning model?",
+      "maxMarks": 10,
+      "status": "answered",
+      "score": 8,
+      "feedback": "Excellent explanation of reinforcement learning concepts and their application to autonomous cars. The answer is detailed and well-structured, though it could benefit from a brief mention of exploration vs. exploitation trade-offs for full marks.",
+      "transcribedAnswer": "Learning requires a balance between exploration, which tries unfamiliar actions to collect information, and exploitation, which uses the best action currently known. Common approaches include Q-learning and Deep Q-Networks for action values, policy-gradient methods for directly improving a policy, and actor-critic methods that learn both a policy and a value estimate. Training may be organized into episodes, with terminal states such as reaching the destination or ending a simulation.\n\nFor an autonomous car, the environment contains the lane geometry, curves, intersections, traffic signs and lights, other vehicles, pedestrians, cyclists, obstacles, weather, road friction and the destination map. The observable state can be constructed from camera, LiDAR, radar, GPS and inertial sensors. Useful state variables include vehicle speed, heading, lane offset, distance and relative speed to nearby objects, signal status, free-space map and route progress.\n\nThe action space may be continuous, such as steering angle, throttle and brake pressure, or partly discrete, such as keep lane, change lane, stop and turn. Because real-world exploration is unsafe, most learning should first occur in a high-fidelity simulator, followed by carefully constrained testing and safety monitoring.\n\nGive a strong positive reward for safely reaching the destination. Give small positive rewards for forward route progress, correct lane position and maintaining a safe following distance. Reward obeying traffic lights, speed limits and right-of-way rules. Reward smooth steering, acceleration and braking so that passenger comfort and energy use are considered. Give a very large negative reward for a collision. Also penalize a near miss, lane departure, red-light violation, speeding, excessive delay and harsh control actions. Use terminal conditions for collision, an unrecoverable off-road state, or successful arrival.",
+      "regions": [
+        {
+          "page": 0,
+          "bbox": {
+            "x": 0.099,
+            "y": 0.109,
+            "w": 0.837,
+            "h": 0.15600000000000003
+          },
+          "rawLabel": "# Q1 (cont.)",
+          "normalizedLabel": "Q1_CONT",
+          "isContinuation": true,
+          "resolvedQuestionId": null,
+          "resolutionMethod": "unresolved",
+          "blockIds": [
+            "block_as_0_2"
+          ],
+          "mappingConfidence": "high",
+          "note": ""
+        },
+        {
+          "page": 0,
+          "bbox": {
+            "x": 0.099,
+            "y": 0.301,
+            "w": 0.821,
+            "h": 0.2710000000000001
+          },
+          "rawLabel": "# 2) Autonomous-car environment",
+          "normalizedLabel": "Q1_CONT",
+          "isContinuation": true,
+          "resolvedQuestionId": null,
+          "resolutionMethod": "unresolved",
+          "blockIds": [
+            "block_as_0_4",
+            "block_as_0_5"
+          ],
+          "mappingConfidence": "high",
+          "note": ""
+        },
+        {
+          "page": 0,
+          "bbox": {
+            "x": 0.114,
+            "y": 0.609,
+            "w": 0.813,
+            "h": 0.243
+          },
+          "rawLabel": "# 3) Reward design for the car",
+          "normalizedLabel": "Q1_CONT",
+          "isContinuation": true,
+          "resolvedQuestionId": null,
+          "resolutionMethod": "unresolved",
+          "blockIds": [
+            "block_as_0_7"
+          ],
+          "mappingConfidence": "high",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "number": "2",
+      "extractedLabel": "Q2 - OR alternative: customer segmentation and accuracy",
+      "text": "OR\n\nA large e-commerce company wants to personalize the online shopping experience but lacks explicit user feedback. Instead of data for direct recommendation, propose an **unsupervised learning** approach that could segment customers into meaningful groups based solely on their browsing history and purchase patterns (e.g., products viewed, categories clicked, purchase frequency).\n\nJustify why unsupervised learning is appropriate and describe what insights each segment might provide.\n\nYou have 100 images, 80 of cats and 20 of dogs. If your model correctly identifies all 80 cats but misclassifies all 20 dogs as cats, calculate the **accuracy** and comment on its effectiveness.",
+      "maxMarks": 10,
+      "status": "answered",
+      "score": 9,
+      "feedback": "Strong response covering unsupervised learning justification and customer segmentation approach. The insights provided for each segment are practical and well-explained. Consider adding a brief note on evaluation metrics for clustering to reach full marks.",
+      "transcribedAnswer": "Because the company has no explicit labels such as a preferred product class or a satisfaction score, the task is to discover structure rather than predict a known target. A suitable solution is clustering, supported by customer-level feature engineering.\n\nCreate one row per customer over a fixed time window. Use browsing features such as number of sessions, products viewed, category-view proportions, search count, dwell time and time since the last visit. Use purchase features such as recency, purchase frequency, monetary value, average basket size, categories purchased, repeat-purchase rate and return rate. Add behavioural ratios such as viewed-to-purchased conversion, cart-abandonment rate, discount usage and mobile-versus-desktop share.\n\nCounts and monetary values are usually skewed, so log transformation can be applied. Missing values are handled, categorical information is encoded, and numerical features are standardized so that one high-magnitude variable does not control the distance. PCA or a learned embedding may be used to compress a very wide feature matrix.\n\nK-Means is a simple starting method when roughly compact clusters are expected. Gaussian Mixture Models provide soft membership probabilities; hierarchical clustering gives a useful dendrogram; and DBSCAN can detect irregular dense groups and noise. The number of clusters can be selected using the elbow curve, silhouette score, stability across resamples and, most importantly, business interpretability.\n\nLoyal high-value customers: frequent purchases, high spend and short recency. They suit loyalty rewards, early access and retention attention.\n\nActive browsers with low conversion: many views and long sessions but few purchases. They reveal friction in price, trust, delivery or checkout.",
+      "regions": [
+        {
+          "page": 1,
+          "bbox": {
+            "x": 0.1,
+            "y": 0.169,
+            "w": 0.836,
+            "h": 0.573
+          },
+          "rawLabel": "# Q2 - OR alternative: customer segmentation and accuracy",
+          "normalizedLabel": "Q2",
+          "isContinuation": false,
+          "resolvedQuestionId": null,
+          "resolutionMethod": "explicit_label",
+          "blockIds": [
+            "block_as_1_3",
+            "block_as_1_4",
+            "block_as_1_5",
+            "block_as_1_6"
+          ],
+          "mappingConfidence": "high",
+          "note": ""
+        },
+        {
+          "page": 1,
+          "bbox": {
+            "x": 0.112,
+            "y": 0.779,
+            "w": 0.822,
+            "h": 0.10799999999999998
+          },
+          "rawLabel": "# Example segments and insights",
+          "normalizedLabel": "Q2",
+          "isContinuation": false,
+          "resolvedQuestionId": null,
+          "resolutionMethod": "explicit_label",
+          "blockIds": [
+            "block_as_1_8"
+          ],
+          "mappingConfidence": "high",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "3a",
+      "number": "3",
+      "subpart": "a",
+      "extractedLabel": null,
+      "text": "A) Given dataset for predicting student's test score (Y) based on hours studied (X):\n\n[tbl-0.html](tbl-0.html)\n\nUsing the least squares method, estimate the line of best fit in the form: Y = a + bX",
+      "maxMarks": 5,
+      "status": "unanswered",
+      "score": 0,
+      "feedback": "No answer found for this question.",
+      "transcribedAnswer": "",
+      "regions": []
+    },
+    {
+      "id": "3b",
+      "number": "3",
+      "subpart": "b",
+      "extractedLabel": null,
+      "text": "B) When would you choose a **Decision Tree** over **KNN**?",
+      "maxMarks": 3,
+      "status": "unanswered",
+      "score": 0,
+      "feedback": "No answer found for this question.",
+      "transcribedAnswer": "",
+      "regions": []
+    },
+    {
+      "id": "4a",
+      "number": "4",
+      "extractedLabel": null,
+      "text": "OR\n\nJustify using **ensemble methods** instead of a single supervised model.\n\nAnalyze the use of a **Logistic Regression** model in real-life applications.",
+      "maxMarks": 5,
+      "status": "unanswered",
+      "score": 0,
+      "feedback": "No answer found for this question.",
+      "transcribedAnswer": "",
+      "regions": []
+    },
+    {
+      "id": "5a",
+      "number": "5",
+      "extractedLabel": null,
+      "text": "Explain the impact of **data preprocessing** on clustering.\n\nWeights (kg) of 9 persons: 42, 45, 47, 60, 62, 65, 80, 82, 85\n\nUsing K = 3 and initial centroids: C1 = 45, C2 = 60, C3 = 80, perform one iteration of **K-Means clustering** using Euclidean distance and find:\n\n- Cluster assignments\n\n- Updated centroids",
+      "maxMarks": 10,
+      "status": "unanswered",
+      "score": 0,
+      "feedback": "No answer found for this question.",
+      "transcribedAnswer": "",
+      "regions": []
+    },
+    {
+      "id": "6",
+      "number": "6",
+      "extractedLabel": null,
+      "text": "No question text provided in OCR for Q6.",
+      "maxMarks": 5,
+      "status": "unanswered",
+      "score": 0,
+      "feedback": "No answer found for this question.",
+      "transcribedAnswer": "",
+      "regions": []
+    }
+  ],
+  "orphanAnswers": [],
+  "totalScore": 17,
+  "totalMaxMarks": 48,
+  "summary": "The student demonstrated strong understanding of reinforcement learning and unsupervised learning concepts, providing detailed and well-structured answers for Q1 and Q2. However, several questions (Q3, Q4, Q5, Q6) were left unanswered, which significantly impacts the overall score. Focus on attempting all questions in future exams to maximize marks.",
+  "ocrBlocks": {
+    "block_qp_0_0": {
+      "x": 0.276,
+      "y": 0.058,
+      "w": 0.447,
+      "h": 0.021
+    },
+    "block_qp_0_1": {
+      "x": 0.347,
+      "y": 0.086,
+      "w": 0.304,
+      "h": 0.016
+    },
+    "block_qp_0_2": {
+      "x": 0.086,
+      "y": 0.132,
+      "w": 0.029,
+      "h": 0.014
+    },
+    "block_qp_0_3": {
+      "x": 0.085,
+      "y": 0.155,
+      "w": 0.823,
+      "h": 0.034
+    },
+    "block_qp_0_4": {
+      "x": 0.085,
+      "y": 0.199,
+      "w": 0.827,
+      "h": 0.035
+    },
+    "block_qp_0_5": {
+      "x": 0.086,
+      "y": 0.243,
+      "w": 0.031,
+      "h": 0.015
+    },
+    "block_qp_0_6": {
+      "x": 0.482,
+      "y": 0.267,
+      "w": 0.034,
+      "h": 0.014
+    },
+    "block_qp_0_7": {
+      "x": 0.085,
+      "y": 0.29,
+      "w": 0.827,
+      "h": 0.071
+    },
+    "block_qp_0_8": {
+      "x": 0.085,
+      "y": 0.37,
+      "w": 0.825,
+      "h": 0.017
+    },
+    "block_qp_0_9": {
+      "x": 0.085,
+      "y": 0.395,
+      "w": 0.827,
+      "h": 0.034
+    },
+    "block_qp_0_10": {
+      "x": 0.086,
+      "y": 0.44,
+      "w": 0.031,
+      "h": 0.016
+    },
+    "block_qp_0_11": {
+      "x": 0.106,
+      "y": 0.465,
+      "w": 0.653,
+      "h": 0.017
+    },
+    "block_qp_0_12": {
+      "x": 0.164,
+      "y": 0.487,
+      "w": 0.672,
+      "h": 0.109
+    },
+    "block_qp_0_13": {
+      "x": 0.106,
+      "y": 0.596,
+      "w": 0.653,
+      "h": 0.015
+    },
+    "block_qp_0_14": {
+      "x": 0.106,
+      "y": 0.62,
+      "w": 0.451,
+      "h": 0.017
+    },
+    "block_qp_0_15": {
+      "x": 0.086,
+      "y": 0.648,
+      "w": 0.031,
+      "h": 0.014
+    },
+    "block_qp_0_16": {
+      "x": 0.482,
+      "y": 0.672,
+      "w": 0.034,
+      "h": 0.014
+    },
+    "block_qp_0_17": {
+      "x": 0.085,
+      "y": 0.695,
+      "w": 0.562,
+      "h": 0.016
+    },
+    "block_qp_0_18": {
+      "x": 0.085,
+      "y": 0.721,
+      "w": 0.576,
+      "h": 0.016
+    },
+    "block_qp_0_19": {
+      "x": 0.086,
+      "y": 0.748,
+      "w": 0.031,
+      "h": 0.014
+    },
+    "block_qp_0_20": {
+      "x": 0.086,
+      "y": 0.772,
+      "w": 0.447,
+      "h": 0.016
+    },
+    "block_qp_0_21": {
+      "x": 0.085,
+      "y": 0.798,
+      "w": 0.474,
+      "h": 0.016
+    },
+    "block_qp_0_22": {
+      "x": 0.085,
+      "y": 0.824,
+      "w": 0.827,
+      "h": 0.035
+    },
+    "block_qp_0_23": {
+      "x": 0.106,
+      "y": 0.868,
+      "w": 0.165,
+      "h": 0.016
+    },
+    "block_qp_0_24": {
+      "x": 0.106,
+      "y": 0.886,
+      "w": 0.149,
+      "h": 0.015
+    },
+    "block_qp_0_25": {
+      "x": 0.086,
+      "y": 0.914,
+      "w": 0.031,
+      "h": 0.013
+    },
+    "block_qp_0_26": {
+      "x": 0.372,
+      "y": 0.956,
+      "w": 0.191,
+      "h": 0.013
+    },
+    "block_as_0_0": {
+      "x": 0.1,
+      "y": 0.032,
+      "w": 0.25,
+      "h": 0.016
+    },
+    "block_as_0_1": {
+      "x": 0.099,
+      "y": 0.087,
+      "w": 0.105,
+      "h": 0.018
+    },
+    "block_as_0_2": {
+      "x": 0.099,
+      "y": 0.109,
+      "w": 0.837,
+      "h": 0.156
+    },
+    "block_as_0_3": {
+      "x": 0.1,
+      "y": 0.275,
+      "w": 0.42,
+      "h": 0.021
+    },
+    "block_as_0_4": {
+      "x": 0.099,
+      "y": 0.301,
+      "w": 0.821,
+      "h": 0.155
+    },
+    "block_as_0_5": {
+      "x": 0.099,
+      "y": 0.462,
+      "w": 0.812,
+      "h": 0.11
+    },
+    "block_as_0_6": {
+      "x": 0.1,
+      "y": 0.584,
+      "w": 0.384,
+      "h": 0.021
+    },
+    "block_as_0_7": {
+      "x": 0.114,
+      "y": 0.609,
+      "w": 0.813,
+      "h": 0.243
+    },
+    "block_as_0_8": {
+      "x": 0.652,
+      "y": 0.968,
+      "w": 0.182,
+      "h": 0.016
+    },
+    "block_as_0_9": {
+      "x": 0.85,
+      "y": 0.97,
+      "w": 0.094,
+      "h": 0.014
+    },
+    "block_as_1_0": {
+      "x": 0.1,
+      "y": 0.032,
+      "w": 0.251,
+      "h": 0.016
+    },
+    "block_as_1_1": {
+      "x": 0.099,
+      "y": 0.084,
+      "w": 0.777,
+      "h": 0.049
+    },
+    "block_as_1_2": {
+      "x": 0.101,
+      "y": 0.144,
+      "w": 0.499,
+      "h": 0.022
+    },
+    "block_as_1_3": {
+      "x": 0.1,
+      "y": 0.169,
+      "w": 0.818,
+      "h": 0.088
+    },
+    "block_as_1_4": {
+      "x": 0.112,
+      "y": 0.265,
+      "w": 0.811,
+      "h": 0.217
+    },
+    "block_as_1_5": {
+      "x": 0.1,
+      "y": 0.493,
+      "w": 0.82,
+      "h": 0.108
+    },
+    "block_as_1_6": {
+      "x": 0.1,
+      "y": 0.609,
+      "w": 0.836,
+      "h": 0.133
+    },
+    "block_as_1_7": {
+      "x": 0.101,
+      "y": 0.753,
+      "w": 0.387,
+      "h": 0.022
+    },
+    "block_as_1_8": {
+      "x": 0.112,
+      "y": 0.779,
+      "w": 0.822,
+      "h": 0.108
+    },
+    "block_as_1_9": {
+      "x": 0.654,
+      "y": 0.969,
+      "w": 0.181,
+      "h": 0.015
+    },
+    "block_as_1_10": {
+      "x": 0.851,
+      "y": 0.971,
+      "w": 0.092,
+      "h": 0.013
+    },
+    "block_as_2_0": {
+      "x": 0.1,
+      "y": 0.032,
+      "w": 0.25,
+      "h": 0.016
+    },
+    "block_as_2_1": {
+      "x": 0.099,
+      "y": 0.083,
+      "w": 0.691,
+      "h": 0.05
+    },
+    "block_as_2_2": {
+      "x": 0.101,
+      "y": 0.144,
+      "w": 0.188,
+      "h": 0.022
+    },
+    "block_as_2_3": {
+      "x": 0.099,
+      "y": 0.169,
+      "w": 0.844,
+      "h": 0.088
+    },
+    "block_as_2_4": {
+      "x": 0.132,
+      "y": 0.265,
+      "w": 0.629,
+      "h": 0.02
+    },
+    "block_as_2_5": {
+      "x": 0.101,
+      "y": 0.295,
+      "w": 0.196,
+      "h": 0.024
+    },
+    "block_as_2_6": {
+      "x": 0.099,
+      "y": 0.32,
+      "w": 0.806,
+      "h": 0.065
+    },
+    "block_as_2_7": {
+      "x": 0.132,
+      "y": 0.393,
+      "w": 0.794,
+      "h": 0.043
+    },
+    "block_as_2_8": {
+      "x": 0.099,
+      "y": 0.442,
+      "w": 0.809,
+      "h": 0.11
+    },
+    "block_as_2_9": {
+      "x": 0.101,
+      "y": 0.564,
+      "w": 0.171,
+      "h": 0.024
+    },
+    "block_as_2_10": {
+      "x": 0.099,
+      "y": 0.59,
+      "w": 0.844,
+      "h": 0.111
+    },
+    "block_as_2_11": {
+      "x": 0.101,
+      "y": 0.712,
+      "w": 0.485,
+      "h": 0.023
+    },
+    "block_as_2_12": {
+      "x": 0.648,
+      "y": 0.969,
+      "w": 0.182,
+      "h": 0.015
+    },
+    "block_as_2_13": {
+      "x": 0.844,
+      "y": 0.97,
+      "w": 0.1,
+      "h": 0.014
+    }
+  }
+}

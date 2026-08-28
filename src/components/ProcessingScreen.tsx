@@ -28,6 +28,21 @@ export default function ProcessingScreen({
 }: {
   stepIndex: number;
 }) {
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (secs: number) => {
+    const mins = Math.floor(secs / 60);
+    const remainingSecs = secs % 60;
+    return `${mins.toString().padStart(2, "0")}:${remainingSecs.toString().padStart(2, "0")}`;
+  };
+
   return (
     <div className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#eef5fa] p-4 sm:p-6">
       <div className="relative flex h-full w-full max-w-[1920px] gap-4 overflow-hidden rounded-[32px] bg-[#f4f6f8] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
@@ -35,10 +50,10 @@ export default function ProcessingScreen({
         <div className="flex min-w-0 flex-1 flex-col gap-4">
           <TopBar />
 
-          <div className="relative z-10 flex flex-1 items-center justify-center">
-            <div className="flex w-full max-w-lg flex-col items-center gap-10">
+          <div className="relative z-10 flex flex-1 justify-center overflow-y-auto py-8">
+            <div className="my-auto flex w-full max-w-lg flex-col items-center gap-8 pb-8">
               
-              <div className="flex flex-col items-center gap-4 text-center">
+              <div className="flex flex-col items-center gap-3 text-center">
                 <div className="relative flex size-[96px] items-center justify-center">
                   <div className="veda-spin-slow absolute inset-0 rounded-full border-4 border-dashed border-[#ff8d36]/40" />
                   <div className="absolute inset-2 rounded-full bg-gradient-to-br from-[#ffe3d2] to-[#ffcaa8]" />
@@ -50,9 +65,22 @@ export default function ProcessingScreen({
                   <h2 className="text-3xl font-bold tracking-tight text-[#303030]">
                     Analyzing Document
                   </h2>
-                  <p className="mt-2 text-base font-medium text-[#5e5e5e]/80">
-                    Our AI is processing the uploaded files. This typically takes 20-30 seconds.
+                  <p className="mt-1.5 text-sm font-medium text-[#5e5e5e]/80">
+                    Our AI is processing the uploaded files.
                   </p>
+                </div>
+
+                {/* Live Processing Timer */}
+                <div className="mt-1 inline-flex items-center gap-2 rounded-full border border-black/5 bg-white px-4 py-1.5 text-xs font-bold text-[#303030] shadow-sm">
+                  <span className="relative flex size-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff5623] opacity-75"></span>
+                    <span className="relative inline-flex size-2 rounded-full bg-[#ff5623]"></span>
+                  </span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#ff5623]">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  <span>Elapsed Time: <span className="font-mono text-sm">{formatTime(elapsedSeconds)}</span></span>
                 </div>
               </div>
 

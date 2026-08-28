@@ -10,9 +10,10 @@ import type { ExtractionResult, PageImage } from "@/lib/types";
 interface MappingScreenProps {
   result: ExtractionResult;
   answerSheetPages: PageImage[];
+  processingDurationMs?: number;
 }
 
-export default function MappingScreen({ result, answerSheetPages }: MappingScreenProps) {
+export default function MappingScreen({ result, answerSheetPages, processingDurationMs }: MappingScreenProps) {
   const [selectedId, setSelectedId] = useState<string | null>(
     result.questions[0]?.id ?? null
   );
@@ -21,6 +22,14 @@ export default function MappingScreen({ result, answerSheetPages }: MappingScree
   );
   const [selectedOrphanId, setSelectedOrphanId] = useState<string | null>(null);
   const [expandAll, setExpandAll] = useState(false);
+
+  const formatDuration = (ms?: number) => {
+    if (!ms) return null;
+    if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
+    const mins = Math.floor(ms / 60000);
+    const secs = Math.round((ms % 60000) / 1000);
+    return `${mins}m ${secs}s`;
+  };
 
   const selectedQuestion = useMemo(
     () => result.questions.find((q) => q.id === selectedId) ?? null,
@@ -53,7 +62,7 @@ export default function MappingScreen({ result, answerSheetPages }: MappingScree
       <div className="relative flex h-full w-full max-w-[1920px] gap-4 overflow-hidden rounded-[32px] bg-[#f4f6f8] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <TopBar />
+          <TopBar processingDurationMs={processingDurationMs} />
 
           <div className="mx-auto flex w-full max-w-[1440px] flex-1 gap-4 overflow-hidden">
           {/* Left panel: extracted questions */}
