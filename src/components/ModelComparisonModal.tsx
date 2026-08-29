@@ -27,7 +27,7 @@ export default function ModelComparisonModal({ onClose, onSelectEngine }: ModelC
   const content = (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] bg-white p-6 sm:p-8 shadow-2xl border border-black/5">
+      <div className="relative z-10 w-full max-w-2xl max-h-[95vh] overflow-y-auto rounded-[28px] bg-white p-6 sm:p-8 shadow-2xl border border-black/5">
         
         {/* Header */}
         <div className="flex items-start justify-between border-b border-black/5 pb-4">

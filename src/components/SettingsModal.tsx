@@ -22,7 +22,7 @@ export default function SettingsModal({ onClose }: { onClose: () => void }) {
   const content = (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-[24px] bg-white p-6 shadow-xl">
+      <div className="relative z-10 w-full max-w-md max-h-[95vh] overflow-y-auto rounded-[24px] bg-white p-6 shadow-xl">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-xl bg-[#f4f6f8]">
