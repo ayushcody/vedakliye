@@ -24,20 +24,34 @@ async function imageFileToPages(file: File): Promise<PageImage[]> {
   const dataUrl = await fileToDataUrl(file);
   const img = await loadImage(dataUrl);
 
+  const MAX_DIM = 1600;
+  let width = img.naturalWidth;
+  let height = img.naturalHeight;
+
+  if (width > MAX_DIM || height > MAX_DIM) {
+    if (width > height) {
+      height = Math.round((height * MAX_DIM) / width);
+      width = MAX_DIM;
+    } else {
+      width = Math.round((width * MAX_DIM) / height);
+      height = MAX_DIM;
+    }
+  }
+
   const canvas = document.createElement("canvas");
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
+  canvas.width = width;
+  canvas.height = height;
   const ctx = canvas.getContext("2d");
   
   if (ctx) {
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
+    ctx.fillRect(0, 0, width, height);
+    ctx.drawImage(img, 0, 0, width, height);
     
     return [
       {
         page: 0,
-        dataUrl: canvas.toDataURL("image/jpeg", 0.7),
+        dataUrl: canvas.toDataURL("image/jpeg", 0.5),
         width: img.naturalWidth,
         height: img.naturalHeight,
       },
@@ -63,7 +77,7 @@ async function pdfFileToPages(file: File): Promise<PageImage[]> {
   const pdf = await loadingTask.promise;
 
   const pages: PageImage[] = [];
-  const targetScale = 2; // higher res for better OCR/handwriting quality
+  const targetScale = 1.3; // Reduced to prevent Vercel 4.5MB payload limit errors
 
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
@@ -80,7 +94,7 @@ async function pdfFileToPages(file: File): Promise<PageImage[]> {
 
     await page.render({ canvasContext: ctx, viewport, canvas }).promise;
 
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.5);
     pages.push({
       page: i - 1,
       dataUrl,
