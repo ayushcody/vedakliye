@@ -23,6 +23,27 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 async function imageFileToPages(file: File): Promise<PageImage[]> {
   const dataUrl = await fileToDataUrl(file);
   const img = await loadImage(dataUrl);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext("2d");
+  
+  if (ctx) {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+    
+    return [
+      {
+        page: 0,
+        dataUrl: canvas.toDataURL("image/jpeg", 0.7),
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+      },
+    ];
+  }
+
   return [
     {
       page: 0,
@@ -54,9 +75,12 @@ async function pdfFileToPages(file: File): Promise<PageImage[]> {
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("Could not get canvas context");
 
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     await page.render({ canvasContext: ctx, viewport, canvas }).promise;
 
-    const dataUrl = canvas.toDataURL("image/png");
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
     pages.push({
       page: i - 1,
       dataUrl,
