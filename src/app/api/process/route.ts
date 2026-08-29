@@ -3,7 +3,8 @@ import { extractAndGrade } from "@/lib/gemini";
 import { extractAndGradeMistral } from "@/lib/mistral";
 import type { ProcessRequestBody } from "@/lib/types";
 
-export const maxDuration = 900;
+export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   const encoder = new TextEncoder();
