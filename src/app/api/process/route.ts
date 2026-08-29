@@ -4,6 +4,7 @@ import { extractAndGradeMistral } from "@/lib/mistral";
 import type { ProcessRequestBody } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
