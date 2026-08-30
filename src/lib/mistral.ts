@@ -2,8 +2,8 @@ import type { ExtractionResult, BoundingBox } from "./types";
 import { Mistral } from '@mistralai/mistralai';
 
 const OCR_MODEL = "mistral-ocr-4-1";
-const PRIMARY_LLM_MODEL = "mistral-large-latest";
-const FALLBACK_LLM_MODEL = "mistral-small-latest"; 
+const PRIMARY_LLM_MODEL = "mistral-small-latest";
+const FALLBACK_LLM_MODEL = "open-mistral-7b"; 
 
 const SYSTEM_PROMPT = `You are an expert teaching assistant AI helping a teacher grade a student's handwritten exam.
 
@@ -257,14 +257,15 @@ export async function extractAndGradeMistral(
         lastStatus = error.statusCode || error.status || "UNKNOWN";
         lastErrorMessage = error.message || String(error);
         
-        const isTransient = lastStatus === 429 || lastStatus === 503 || lastStatus === 504 || (typeof lastStatus === 'number' && lastStatus >= 500) || lastErrorMessage.includes('fetch failed') || lastErrorMessage.includes('ETIMEDOUT') || lastErrorMessage.toLowerCase().includes('timeout') || error.code === 'ETIMEDOUT' || error.cause?.code === 'ETIMEDOUT';
+        const isTierError = lastStatus === 403 || lastErrorMessage.includes("tier_not_allowed") || lastErrorMessage.includes("not available in your subscription tier");
+        const isTransient = isTierError || lastStatus === 429 || lastStatus === 503 || lastStatus === 504 || (typeof lastStatus === 'number' && lastStatus >= 500) || lastErrorMessage.includes('fetch failed') || lastErrorMessage.includes('ETIMEDOUT') || lastErrorMessage.toLowerCase().includes('timeout') || error.code === 'ETIMEDOUT' || error.cause?.code === 'ETIMEDOUT';
         
         if (isTransient && attempt < maxRetries) {
-          const jitter = Math.random() * 1000;
-          const waitTime = lastStatus === 429 
+          const jitter = Math.random() * 500;
+          const waitTime = isTierError ? 500 : (lastStatus === 429 
             ? Math.min(60000, (attempt * 15000) + jitter)
-            : (Math.pow(2, attempt) * 1000) + jitter;
-          console.log(`[MISTRAL LLM] Transient error on mapping batch ${batchIdx + 1} (Status ${lastStatus}). Switching/Waiting ${(waitTime/1000).toFixed(1)}s (Attempt ${attempt}/${maxRetries}, next model: ${attempt >= 2 ? FALLBACK_LLM_MODEL : PRIMARY_LLM_MODEL})...`);
+            : (Math.pow(2, attempt) * 1000) + jitter);
+          console.log(`[MISTRAL LLM] ${isTierError ? "Subscription Tier Error (403)" : "Transient error"} on mapping batch ${batchIdx + 1}. Switching/Waiting ${(waitTime/1000).toFixed(1)}s (Attempt ${attempt}/${maxRetries}, trying fallback model: ${FALLBACK_LLM_MODEL})...`);
           await new Promise(resolve => setTimeout(resolve, waitTime));
         } else if (!isTransient || attempt >= maxRetries) {
           throw new Error(`MISTRAL_LLM_TRANSIENT_FAILURE - Batch: ${batchIdx + 1}/${asBatches.length}, Final Status: ${lastStatus}, Retries: ${attempt}, Error: ${lastErrorMessage}`);
