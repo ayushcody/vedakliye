@@ -161,20 +161,20 @@ export default function UploadScreen({ onStart }: UploadScreenProps) {
       <div className="flex min-w-0 flex-1 flex-col gap-4">
         <TopBar />
 
-        <div className="relative z-10 flex flex-1 items-center justify-center py-4">
-          <div className="flex w-full max-w-[1103px] flex-col items-center gap-4 sm:gap-6 rounded-[40px]">
-            <div className="flex flex-col items-center gap-3 sm:gap-4">
+        <div className="relative z-10 flex flex-1 items-center justify-center py-2 overflow-y-auto min-h-0">
+          <div className="flex w-full max-w-[1103px] flex-col items-center gap-2 sm:gap-4 rounded-[40px] my-auto">
+            <div className="flex flex-col items-center gap-2 sm:gap-3">
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-center">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#2b2b2b]">Upload</h1>
               <h1 className="rounded-lg bg-[#ff9350]/15 px-2 py-1 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#ff5623]">
                 Question Paper &amp; Answer Sheets
               </h1>
             </div>
-            <p className="text-base sm:text-lg md:text-xl tracking-tight text-[#303030] text-center">
+            <p className="text-sm sm:text-base md:text-lg tracking-tight text-[#303030] text-center">
               Upload both files to get started
             </p>
 
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-1.5">
               <div className="relative flex items-center rounded-full bg-white/60 p-1 shadow-sm border border-black/[0.04] w-fit mx-auto">
                 <div
                   className={`absolute left-1 top-1 h-[calc(100%-8px)] w-[130px] rounded-full bg-white shadow-sm transition-transform duration-300 ease-in-out border border-black/5 ${
@@ -210,16 +210,16 @@ export default function UploadScreen({ onStart }: UploadScreenProps) {
             </div>
 
             {/* Centered Teacher Illustration with Concentric Rings and Badge Icons */}
-            <div className="flex flex-col items-center gap-2 py-3 sm:py-4">
-              <div className="relative flex items-center justify-center size-[180px] sm:size-[220px] md:size-[240px]">
+            <div className="flex flex-col items-center gap-1 py-1 sm:py-2">
+              <div className="relative flex items-center justify-center size-[130px] sm:size-[160px] md:size-[180px]">
                 {/* Outer Soft Ring */}
                 <div className="absolute inset-0 rounded-full bg-[#FF7950]/10 border border-[#FF7950]/20" />
                 
                 {/* Middle Ring */}
-                <div className="absolute inset-5 sm:inset-6 rounded-full bg-[#FF7950]/20 border border-[#FF7950]/30" />
+                <div className="absolute inset-4 sm:inset-5 rounded-full bg-[#FF7950]/20 border border-[#FF7950]/30" />
                 
                 {/* Inner White Circle cropping teacher.png */}
-                <div className="relative z-10 size-[100px] sm:size-[125px] md:size-[135px] rounded-full bg-white shadow-md overflow-hidden border-2 border-white flex items-center justify-center">
+                <div className="relative z-10 size-[75px] sm:size-[95px] md:size-[105px] rounded-full bg-white shadow-md overflow-hidden border-2 border-white flex items-center justify-center">
                   <img 
                     src="/teacher.png" 
                     alt="Teacher Illustration" 
@@ -232,31 +232,31 @@ export default function UploadScreen({ onStart }: UploadScreenProps) {
 
                 {/* Floating Icon Badges */}
                 {/* Top Right: Clock Icon */}
-                <div className="absolute top-[8%] right-[10%] z-20 flex size-7 sm:size-9 items-center justify-center rounded-full bg-[#FF5623] text-white shadow-md border-2 border-white">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-5 sm:h-5">
+                <div className="absolute top-[6%] right-[8%] z-20 flex size-6 sm:size-7 items-center justify-center rounded-full bg-[#FF5623] text-white shadow-md border-2 border-white">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-4 sm:h-4">
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 16 14" />
                   </svg>
                 </div>
 
                 {/* Bottom Right: AI/Cloud Icon */}
-                <div className="absolute bottom-[18%] right-[4%] z-20 flex size-7 sm:size-9 items-center justify-center rounded-full bg-[#FF5623] text-white shadow-md border-2 border-white">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-5 sm:h-5">
+                <div className="absolute bottom-[16%] right-[2%] z-20 flex size-6 sm:size-7 items-center justify-center rounded-full bg-[#FF5623] text-white shadow-md border-2 border-white">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-4 sm:h-4">
                     <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
                   </svg>
                 </div>
 
                 {/* Bottom Left: Settings Icon */}
-                <div className="absolute bottom-[4%] left-[28%] z-20 flex size-7 sm:size-9 items-center justify-center rounded-full bg-[#FF5623] text-white shadow-md border-2 border-white">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-5 sm:h-5">
+                <div className="absolute bottom-[2%] left-[24%] z-20 flex size-6 sm:size-7 items-center justify-center rounded-full bg-[#FF5623] text-white shadow-md border-2 border-white">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-4 sm:h-4">
                     <circle cx="12" cy="12" r="3" />
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
                   </svg>
                 </div>
 
                 {/* Top Left: Checklist/Document Icon */}
-                <div className="absolute top-[32%] left-[4%] z-20 flex size-7 sm:size-9 items-center justify-center rounded-full bg-[#FF5623] text-white shadow-md border-2 border-white">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-5 sm:h-5">
+                <div className="absolute top-[30%] left-[2%] z-20 flex size-6 sm:size-7 items-center justify-center rounded-full bg-[#FF5623] text-white shadow-md border-2 border-white">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-4 sm:h-4">
                     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
                     <path d="m9 14 2 2 4-4" />
