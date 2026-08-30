@@ -30,17 +30,21 @@ export default function Home() {
 
     try {
       setStepIndex(0);
-      setProgressMessage("Preparing pages...");
-      setProgressPercentage(2);
+      setProgressMessage("Reading question paper...");
+      setProgressPercentage(15);
       const questionPages = await fileToPages(questionPaper);
+
       setStepIndex(1);
+      setProgressMessage("Reading answer sheet...");
+      setProgressPercentage(35);
       const answerPages = await fileToPages(answerSheet);
       setAnswerSheetPages(answerPages);
-      setStepIndex(2);
       
+      setStepIndex(2);
       const aiEngine = localStorage.getItem("ai_engine") || "gemini";
       const engineName = aiEngine === "mistral" ? "Mistral AI" : "Google Gemini";
-      setProgressMessage(`Sending request to ${engineName}...`);
+      setProgressMessage(`Mapping answers to questions via ${engineName}...`);
+      setProgressPercentage(55);
 
       const res = await fetch("/api/process", {
         method: "POST",
@@ -73,10 +77,11 @@ export default function Home() {
             const data = JSON.parse(line);
             
             if (data.type === "progress") {
-              setStepIndex(data.stepIndex);
-              setProgressMessage(data.message);
-              // Calculate a rough percentage based on step
-              setProgressPercentage(Math.min(95, 20 + (data.stepIndex * 20)));
+              // Ensure stepIndex only moves forward from 2 to 3 during API streaming
+              const nextStep = typeof data.stepIndex === "number" ? Math.max(2, Math.min(3, data.stepIndex)) : 2;
+              setStepIndex(nextStep);
+              if (data.message) setProgressMessage(data.message);
+              setProgressPercentage((prev) => Math.min(95, Math.max(prev, 60 + nextStep * 10)));
             } else if (data.type === "result") {
               const duration = Date.now() - startTime;
               setProcessingDurationMs(duration);
