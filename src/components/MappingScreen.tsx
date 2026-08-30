@@ -22,6 +22,7 @@ export default function MappingScreen({ result, answerSheetPages, processingDura
   );
   const [selectedOrphanId, setSelectedOrphanId] = useState<string | null>(null);
   const [expandAll, setExpandAll] = useState(false);
+  const [mobileTab, setMobileTab] = useState<"questions" | "answers">("questions");
 
   const formatDuration = (ms?: number) => {
     if (!ms) return null;
@@ -58,22 +59,44 @@ export default function MappingScreen({ result, answerSheetPages, processingDura
   const unansweredCount = result.questions.filter((q) => q.status === "unanswered").length;
 
   return (
-    <div className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#eef5fa] p-4 sm:p-6">
-      <div className="relative flex h-full w-full max-w-[1920px] gap-4 overflow-hidden rounded-[32px] bg-[#f4f6f8] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
+    <div className="relative flex min-h-screen lg:h-screen w-full items-center justify-center overflow-y-auto lg:overflow-hidden bg-[#eef5fa] p-2 sm:p-4 lg:p-6">
+      <div className="relative flex min-h-full h-auto lg:h-full w-full max-w-[1920px] gap-4 overflow-y-auto lg:overflow-hidden rounded-[24px] sm:rounded-[32px] bg-[#f4f6f8] p-3 sm:p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col gap-4">
           <TopBar processingDurationMs={processingDurationMs} />
 
-          <div className="mx-auto flex w-full max-w-[1440px] flex-1 gap-4 overflow-hidden">
+          {/* Mobile Tab Switcher */}
+          <div className="flex lg:hidden w-full items-center justify-center rounded-2xl bg-white p-1 shadow-sm border border-black/5">
+            <button
+              onClick={() => setMobileTab("questions")}
+              className={`flex-1 min-h-[44px] py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
+                mobileTab === "questions" ? "bg-[#303030] text-white shadow-sm" : "text-[#5e5e5e] hover:text-[#303030]"
+              }`}
+            >
+              Questions ({result.questions.length})
+            </button>
+            <button
+              onClick={() => setMobileTab("answers")}
+              className={`flex-1 min-h-[44px] py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
+                mobileTab === "answers" ? "bg-[#303030] text-white shadow-sm" : "text-[#5e5e5e] hover:text-[#303030]"
+              }`}
+            >
+              Answer Sheet
+            </button>
+          </div>
+
+          <div className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col lg:flex-row gap-4 overflow-y-auto lg:overflow-hidden">
           {/* Left panel: extracted questions */}
-          <div className="flex w-[672px] shrink-0 flex-col gap-5 rounded-[24px] bg-white p-6 h-full shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+          <div className={`flex w-full lg:w-[672px] lg:shrink-0 flex-col gap-5 rounded-[24px] bg-white p-4 sm:p-6 h-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] ${
+            mobileTab === "questions" ? "flex" : "hidden lg:flex"
+          }`}>
             <div className="flex items-center justify-between">
               <p className="text-xl font-bold text-[#303030]">
                 Assessment Summary
               </p>
               <button
                 onClick={handleExpandAll}
-                className="shrink-0 rounded-full bg-[#f4f6f8] px-5 py-2.5 text-sm font-semibold text-[#181818] hover:bg-[#e2e8f0] transition-colors"
+                className="shrink-0 min-h-[44px] flex items-center justify-center rounded-full bg-[#f4f6f8] px-5 py-2.5 text-sm font-semibold text-[#181818] hover:bg-[#e2e8f0] transition-colors cursor-pointer"
               >
                 {expandAll ? "Collapse All" : "Expand All"}
               </button>
@@ -152,13 +175,17 @@ export default function MappingScreen({ result, answerSheetPages, processingDura
           </div>
 
         {/* Right panel: answer sheet viewer */}
-        <AnswerSheetViewer
-          pages={answerSheetPages}
-          allQuestions={result.questions}
-          selectedQuestion={selectedQuestion}
-          orphanAnswers={result.orphanAnswers}
-          selectedOrphanId={selectedOrphanId}
-        />
+        <div className={`w-full flex-1 flex flex-col h-full min-h-0 ${
+          mobileTab === "answers" ? "flex" : "hidden lg:flex"
+        }`}>
+          <AnswerSheetViewer
+            pages={answerSheetPages}
+            allQuestions={result.questions}
+            selectedQuestion={selectedQuestion}
+            orphanAnswers={result.orphanAnswers}
+            selectedOrphanId={selectedOrphanId}
+          />
+        </div>
       </div>
       </div>
     </div>

@@ -40,24 +40,24 @@ export default function QuestionCard({
             onSelect();
           }
         }}
-        className="flex w-full cursor-pointer items-center gap-4 text-left"
+        className="flex w-full cursor-pointer items-center gap-2.5 sm:gap-4 text-left min-h-[44px]"
       >
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <div
-            className={`flex size-8 shrink-0 items-center justify-center rounded-full text-xl font-extrabold text-white ${
+            className={`flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-full text-base sm:text-xl font-extrabold text-white ${
               isSelected ? "bg-[#ff5623]" : badgeStyle
             }`}
           >
             {question.number}
           </div>
           {question.subpart && (
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#f6f6f6] text-base font-bold text-[#303030]">
+            <div className="flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-full bg-[#f6f6f6] text-sm sm:text-base font-bold text-[#303030]">
               {question.subpart}.
             </div>
           )}
         </div>
-        <p className="flex-1 text-base leading-relaxed text-[#303030]">{question.text}</p>
-        <div className="flex shrink-0 items-center gap-4">
+        <p className="flex-1 text-sm sm:text-base leading-relaxed text-[#303030]">{question.text}</p>
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           <ScoreBadge score={question.score} maxMarks={question.maxMarks} />
           <button
             aria-label={isExpanded ? "Collapse" : "Expand"}
@@ -65,7 +65,7 @@ export default function QuestionCard({
               e.stopPropagation();
               onToggleExpand();
             }}
-            className="flex items-center rounded-lg bg-[#f6f6f6] p-1"
+            className="flex min-w-[44px] min-h-[44px] items-center justify-center rounded-lg bg-[#f6f6f6] p-2 hover:bg-[#eaecee] transition-colors cursor-pointer"
           >
             <svg
               width="20"

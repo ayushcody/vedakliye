@@ -75,7 +75,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <div className="flex h-full w-[280px] shrink-0 flex-col justify-between rounded-[24px] bg-white px-6 py-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    <div className="hidden md:flex h-full w-[280px] shrink-0 flex-col justify-between rounded-[24px] bg-white px-6 py-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-3">
           <div className="flex size-10 items-center justify-center rounded-[10px] shadow-sm overflow-hidden border border-black/5">
@@ -86,7 +86,7 @@ export default function Sidebar() {
         
         <button 
           onClick={() => alert("AI Teacher's Toolkit is under construction!")}
-          className="flex w-full items-center justify-center gap-2 rounded-full border border-[#ff5623]/30 bg-[#2b2b2b] px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#1a1a1a] transition-colors"
+          className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full border border-[#ff5623]/30 bg-[#2b2b2b] px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#1a1a1a] transition-colors cursor-pointer"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2Z" fill="#ff7950" />
@@ -100,7 +100,7 @@ export default function Sidebar() {
               key={icon.label}
               title={icon.label}
               onClick={() => setActiveTab(icon.label)}
-              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-all duration-200 ${
+              className={`flex w-full min-h-[44px] items-center gap-3 rounded-xl px-4 py-3 font-semibold transition-all duration-200 cursor-pointer ${
                 activeTab === icon.label ? "bg-[#f4f6f8] text-[#303030]" : "text-[#5e5e5e]/70 hover:bg-[#f4f6f8]/50 hover:text-[#303030]"
               }`}
             >
@@ -115,7 +115,7 @@ export default function Sidebar() {
           <button
             onClick={() => setIsModelModalOpen(true)}
             title="Model Selection & Comparison"
-            className="flex w-full items-center justify-between rounded-xl px-4 py-3 font-semibold text-[#5e5e5e]/70 hover:bg-[#f4f6f8]/50 hover:text-[#303030] transition-all duration-200 group"
+            className="flex w-full min-h-[44px] items-center justify-between rounded-xl px-4 py-3 font-semibold text-[#5e5e5e]/70 hover:bg-[#f4f6f8]/50 hover:text-[#303030] transition-all duration-200 group cursor-pointer"
           >
             <div className="flex items-center gap-3">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-current">
@@ -138,7 +138,7 @@ export default function Sidebar() {
         <button 
           onClick={() => setIsSettingsOpen(true)}
           aria-label="Settings" 
-          className="flex items-center gap-3 rounded-xl px-4 py-3 font-semibold text-[#5e5e5e]/70 hover:bg-[#f4f6f8]/50 hover:text-[#303030] transition-all duration-200"
+          className="flex items-center min-h-[44px] gap-3 rounded-xl px-4 py-3 font-semibold text-[#5e5e5e]/70 hover:bg-[#f4f6f8]/50 hover:text-[#303030] transition-all duration-200 cursor-pointer"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="3" />

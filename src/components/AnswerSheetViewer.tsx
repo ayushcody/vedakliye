@@ -164,49 +164,49 @@ export default function AnswerSheetViewer({
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden rounded-[24px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative">
-      <div className="flex h-16 shrink-0 items-center justify-between border-b border-black/5 bg-white px-6 py-3 relative z-20">
-        <p className="text-lg font-bold text-[#303030]">Answer Sheet</p>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 rounded-xl bg-[#f4f6f8] px-3 py-2">
+      <div className="flex flex-wrap sm:flex-nowrap min-h-[56px] shrink-0 items-center justify-between gap-2 border-b border-black/5 bg-white px-3 sm:px-6 py-2 relative z-20">
+        <p className="text-base sm:text-lg font-bold text-[#303030]">Answer Sheet</p>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-2 rounded-xl bg-[#f4f6f8] px-2 sm:px-3 py-1">
             <button
               aria-label="Zoom out"
               onClick={() => setZoom((z) => Math.max(50, z - 10))}
-              className="text-[#303030] hover:text-black transition-colors"
+              className="flex min-w-[44px] min-h-[44px] items-center justify-center text-[#303030] hover:text-black transition-colors cursor-pointer"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </button>
-            <span className="text-sm font-bold text-[#303030] min-w-[3ch] text-center">{zoom}%</span>
+            <span className="text-xs sm:text-sm font-bold text-[#303030] min-w-[3ch] text-center">{zoom}%</span>
             <button
               aria-label="Zoom in"
               onClick={() => setZoom((z) => Math.min(200, z + 10))}
-              className="text-[#303030] hover:text-black transition-colors"
+              className="flex min-w-[44px] min-h-[44px] items-center justify-center text-[#303030] hover:text-black transition-colors cursor-pointer"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </button>
           </div>
-          <div className="flex items-center gap-2 rounded-xl bg-[#f4f6f8] px-3 py-2">
+          <div className="flex items-center gap-1 sm:gap-2 rounded-xl bg-[#f4f6f8] px-2 sm:px-3 py-1">
             <button
               aria-label="Previous page"
               disabled={pageIndex === 0}
               onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
-              className="text-[#303030] hover:text-black transition-colors disabled:opacity-30"
+              className="flex min-w-[44px] min-h-[44px] items-center justify-center text-[#303030] hover:text-black transition-colors disabled:opacity-30 cursor-pointer"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <span className="text-sm font-bold text-[#303030]">
+            <span className="text-xs sm:text-sm font-bold text-[#303030]">
               Page {pageIndex + 1} of {pages.length}
             </span>
             <button
               aria-label="Next page"
               disabled={pageIndex === pages.length - 1}
               onClick={() => setPageIndex((p) => Math.min(pages.length - 1, p + 1))}
-              className="text-[#303030] hover:text-black transition-colors disabled:opacity-30"
+              className="flex min-w-[44px] min-h-[44px] items-center justify-center text-[#303030] hover:text-black transition-colors disabled:opacity-30 cursor-pointer"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -216,9 +216,9 @@ export default function AnswerSheetViewer({
         </div>
       </div>
 
-      <div ref={containerRef} className="flex flex-1 items-start justify-center overflow-auto bg-[#f4f6f8] p-6 relative">
+      <div ref={containerRef} className="flex flex-1 items-start justify-center overflow-auto bg-[#f4f6f8] p-2 sm:p-6 relative">
         <div
-          className="shrink-0 transition-[width] pb-36"
+          className="shrink-0 transition-[width] pb-36 min-w-[300px]"
           style={{ width: `${zoom}%`, maxWidth: "900px" }}
         >
           <div className="relative w-full">

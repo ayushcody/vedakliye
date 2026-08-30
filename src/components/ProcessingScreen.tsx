@@ -44,28 +44,28 @@ export default function ProcessingScreen({
   };
 
   return (
-    <div className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#eef5fa] p-4 sm:p-6">
-      <div className="relative flex h-full w-full max-w-[1920px] gap-4 overflow-hidden rounded-[32px] bg-[#f4f6f8] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
+    <div className="relative flex min-h-screen md:h-screen w-full items-center justify-center overflow-y-auto md:overflow-hidden bg-[#eef5fa] p-2 sm:p-4 md:p-6">
+      <div className="relative flex min-h-full h-auto md:h-full w-full max-w-[1920px] gap-4 overflow-y-auto md:overflow-hidden rounded-[24px] sm:rounded-[32px] bg-[#f4f6f8] p-3 sm:p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col gap-4">
           <TopBar />
 
-          <div className="relative z-10 flex flex-1 justify-center overflow-y-auto py-8">
-            <div className="my-auto flex w-full max-w-lg flex-col items-center gap-8 pb-8">
+          <div className="relative z-10 flex flex-1 justify-center overflow-y-auto py-4 sm:py-8">
+            <div className="my-auto flex w-full max-w-lg flex-col items-center gap-6 sm:gap-8 pb-8 px-2 sm:px-0">
               
               <div className="flex flex-col items-center gap-3 text-center">
-                <div className="relative flex size-[96px] items-center justify-center">
+                <div className="relative flex size-[80px] sm:size-[96px] items-center justify-center">
                   <div className="veda-spin-slow absolute inset-0 rounded-full border-4 border-dashed border-[#ff8d36]/40" />
                   <div className="absolute inset-2 rounded-full bg-gradient-to-br from-[#ffe3d2] to-[#ffcaa8]" />
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="relative">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="relative sm:w-8 sm:h-8">
                     <path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2Z" fill="#ff5623" />
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-3xl font-bold tracking-tight text-[#303030]">
+                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#303030]">
                     Analyzing Document
                   </h2>
-                  <p className="mt-1.5 text-sm font-medium text-[#5e5e5e]/80">
+                  <p className="mt-1.5 text-xs sm:text-sm font-medium text-[#5e5e5e]/80">
                     Our AI is processing the uploaded files.
                   </p>
                 </div>
@@ -85,7 +85,7 @@ export default function ProcessingScreen({
               </div>
 
               {/* Vertical Stepper */}
-              <div className="w-full flex flex-col gap-4">
+              <div className="w-full flex flex-col gap-3 sm:gap-4">
                 {steps.map((step, idx) => {
                   const isActive = idx === stepIndex;
                   const isPast = idx < stepIndex;
@@ -94,8 +94,8 @@ export default function ProcessingScreen({
                   return (
                     <div 
                       key={idx} 
-                      className={`relative flex items-start gap-4 rounded-2xl p-4 transition-all duration-500 ${
-                        isActive ? "bg-white shadow-[0_4px_20px_rgb(0,0,0,0.06)] border border-[#ff8d36]/30 scale-105" 
+                      className={`relative flex items-start gap-3 sm:gap-4 rounded-2xl p-3 sm:p-4 transition-all duration-500 ${
+                        isActive ? "bg-white shadow-[0_4px_20px_rgb(0,0,0,0.06)] border border-[#ff8d36]/30 scale-[1.02] sm:scale-105" 
                         : isPast ? "opacity-70 bg-transparent" 
                         : "opacity-40 bg-transparent grayscale"
                       }`}
