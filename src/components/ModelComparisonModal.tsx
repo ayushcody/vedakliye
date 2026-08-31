@@ -27,10 +27,10 @@ export default function ModelComparisonModal({ onClose, onSelectEngine }: ModelC
   const content = (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-2xl max-h-[95vh] overflow-y-auto rounded-[28px] bg-white p-6 sm:p-8 shadow-2xl border border-black/5">
+      <div className="relative z-10 flex flex-col w-full max-w-2xl max-h-[85vh] sm:max-h-[90vh] rounded-[28px] bg-white shadow-2xl border border-black/5 overflow-hidden">
         
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-black/5 pb-4">
+        <div className="flex items-start justify-between border-b border-black/5 p-6 pb-4 shrink-0 bg-white z-10">
           <div className="flex items-center gap-3">
             <div className="flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ff8d36] to-[#ff5623] text-white shadow-sm">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -44,7 +44,7 @@ export default function ModelComparisonModal({ onClose, onSelectEngine }: ModelC
           </div>
           <button
             onClick={onClose}
-            className="flex size-8 items-center justify-center rounded-full bg-[#f6f6f6] text-[#5e5e5e] hover:bg-[#e5e5e5] transition-colors"
+            className="flex size-8 items-center justify-center rounded-full bg-[#f6f6f6] text-[#5e5e5e] hover:bg-[#e5e5e5] transition-colors cursor-pointer"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -52,8 +52,10 @@ export default function ModelComparisonModal({ onClose, onSelectEngine }: ModelC
           </button>
         </div>
 
-        {/* Model Cards */}
-        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {/* Scrollable Body */}
+        <div className="flex-1 overflow-y-auto p-6 sm:p-8 pt-5 space-y-5">
+          {/* Model Cards */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           
           {/* Gemini Card */}
           <div
@@ -270,6 +272,7 @@ export default function ModelComparisonModal({ onClose, onSelectEngine }: ModelC
               </div>
             </div>
           </div>
+        </div>
         </div>
 
       </div>
