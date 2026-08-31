@@ -15,25 +15,25 @@ Your job, in this exact order:
 
 STEP 1 — Extract every question from the question paper, in the correct printed order.
 - Preserve original question numbering exactly as printed.
-- If a question has labelled sub-parts (e.g. "11 (a)" and "11 (b)"), treat each sub-part as a SEPARATE question entry, with number="11" and subpart="a"/"b" and id="11a"/"11b".
+- If a question has labelled sub-parts (e.g. "1 (a)", "1A", "11 (a)"), treat each sub-part as a SEPARATE question entry. Normalize id to lowercase without spaces or parentheses (e.g. number="1", subpart="a", id="1a").
 - Assign each question a sensible maxMarks (use marks printed on the paper if visible, otherwise infer a reasonable value 2-5 based on question complexity/length).
 
-STEP 2 — Extract the student's answers from the answer sheet.
-- Locate which region(s) of the answer sheet correspond to each question.
-- MAPPING RULE: You MUST rely on explicit handwritten identifiers (e.g. "Q1A", "2(b)", "Ans 3") to map answers to questions. NEVER map based simply on the sequence or order of answers.
+STEP 2 — Extract and map EVERY student answer from the answer sheet from top to bottom on every page.
+- EXHAUSTIVE COVERAGE: Scan every page from the very top line to the bottom. NEVER skip the first question at the top of a page (e.g. "Q1 A" at top of page). If a page has Q1 A, Q1 B, Q1 C, ALL of them MUST be mapped to their respective question entries with valid regions.
+- FLEXIBLE LABEL MATCHING: Students write labels in many formats: "Q1 A", "Q1A", "Q1 A - <Title>", "Q1(a)", "Q1.A", "1A", "1(a)", "Ans 1A". All of these MUST match the question with id "1a". Ignore spaces, hyphens, and title text following the question tag.
 - CONTINUATIONS: "Q5 (cont.)" is NOT "Q5B". It means "continuation of Q5". Set isContinuation: true and normalizedLabel: "Q5_CONT". Do NOT guess subparts for a continuation.
-- EXPLICIT LABEL PRIORITY: If a handwritten label explicitly says "Q1B", it MUST be mapped to the question with id "1b", regardless of its spatial position or whether "1a" was answered.
+- EXPLICIT LABEL PRIORITY: If a handwritten label explicitly says "Q1 A" or "Q1A", it MUST be mapped to question id "1a", regardless of spatial position or order.
 - If you find an answer with no clear label, attempt a confident context match. If unsafe, place it in "orphanAnswers".
 - Transcribe ONLY the student's actual answer (exclude any copied question prompt or title).
 - An answer may span multiple pages — include one region per contiguous block, across as many pages as needed.
 
 BOUNDING BOX & BLOCK SELECTION RULES — read carefully, this is CRITICAL:
 - You MUST specify the exact \`blockIds\` of the OCR blocks that contain ONLY the student's answer text and tables.
-- EXCLUDE QUESTION HEADINGS, LABELS, AND COPIED QUESTIONS: Students often write "# Q2 - Customer Segmentation...", "Q1A", or copy the question title onto the answer sheet. You MUST EXCLUDE these question/title/header blocks from \`blockIds\`. The question label is recorded separately in \`rawLabel\`/\`extractedLabel\`, but MUST NOT be in \`blockIds\`.
-- START AT THE ACTUAL ANSWER BODY: \`blockIds\` must start at the very first block of the student's actual answer content, NOT the question heading above it.
+- EXCLUDE QUESTION HEADINGS, LABELS, AND COPIED QUESTIONS: Students often write "# Q2 - Customer Segmentation...", "Q1 A - Explain Reinforcement Learning...", "Q1A", or copy the question title onto the answer sheet. You MUST EXCLUDE these question/title/header blocks from \`blockIds\`. The question label is recorded separately in \`rawLabel\`/\`extractedLabel\`, but MUST NOT be in \`blockIds\`.
+- START AT THE ACTUAL ANSWER BODY: \`blockIds\` must start at the very first block of the student's actual answer content (e.g. after 'Ans:'), NOT the question heading above it.
 - DO NOT INCLUDE BLANK SPACE OR FOOTERS. Only include the specific \`blockIds\` that contain actual student answer text.
-- INCLUDE ALL PARAGRAPHS AND EXPLANATIONS: A student's answer to a question (e.g. Q1A) often spans multiple paragraphs, application examples, bullet points, derivations, or diagrams. You MUST include ALL \`blockIds\` for all paragraphs belonging to that question until the next question header (e.g. 'Q1 B') begins. NEVER stop after the first paragraph or opening definition. The \`blockIds\` and \`transcribedAnswer\` must encompass the entire response (Paragraph 1, 2, 3, etc.).
-- PREVENT CHARACTER CLIPPING: When computing each box's edges, err very slightly on the side of generous rather than exact — the box must fully contain every character's ink, including ascenders, descenders, and the leftmost/rightmost stroke of the first and last character on each line. A box that clips even a single character (e.g. rendering 'learn' as 'earn' by cutting off the 'l') is a real error, even if it's only 2-3 pixels of clipping. When in doubt about an edge, expand it outward by a few pixels rather than fitting exactly to the visible ink boundary.
+- INCLUDE ALL PARAGRAPHS AND EXPLANATIONS: A student's answer to a question (e.g. Q1 A) often spans multiple paragraphs, application examples, bullet points, derivations, or diagrams. You MUST include ALL \`blockIds\` for all paragraphs belonging to that question until the next question header (e.g. 'Q1 B') begins. NEVER stop after the first paragraph or opening definition. The \`blockIds\` and \`transcribedAnswer\` must encompass the entire response.
+- PREVENT CHARACTER CLIPPING: When computing each box's edges, err very slightly on the side of generous rather than exact — the box must fully contain every character's ink. When in doubt about an edge, expand it outward by a few pixels rather than fitting exactly to the visible ink boundary.
 
 STEP 3 — Handle edge cases explicitly:
 - If a question was answered out of order, still map it correctly to that question using its label.
@@ -55,8 +55,8 @@ IMPORTANT: You MUST return your response as a valid JSON object matching the fol
       "id": "string",
       "number": "string",
       "subpart": "string (optional)",
-      "extractedLabel": "string (The actual handwritten question label you found on the page, e.g. 'Q1A'. null if none)",
-      "normalizedLabel": "string (e.g. 'Q5A', 'Q5_CONT')",
+      "extractedLabel": "string (The actual handwritten question label you found on the page, e.g. 'Q1 A'. null if none)",
+      "normalizedLabel": "string (e.g. 'Q1A', 'Q5_CONT')",
       "text": "string",
       "maxMarks": "number",
       "status": "answered | unanswered | partially_answered",

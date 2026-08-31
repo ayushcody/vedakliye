@@ -85,7 +85,9 @@ STEP 1 — Extract every question from the question paper, in the correct printe
 - If a question has labelled sub-parts (e.g. "11 (a)" and "11 (b)"), treat each sub-part as a SEPARATE question entry, with number="11" and subpart="a"/"b" and id="11a"/"11b".
 - Assign each question a sensible maxMarks (use marks printed on the paper if visible, otherwise infer a reasonable value 2-5 based on question complexity/length).
 
-STEP 2 — Extract the student's answers from the answer sheet.
+STEP 2 — Extract and map EVERY student answer from the answer sheet from top to bottom on every page.
+- EXHAUSTIVE COVERAGE: Scan every page from the very top line to the bottom. NEVER skip the first question at the top of a page (e.g. "Q1 A" at top of page). If a page has Q1 A, Q1 B, Q1 C, ALL of them MUST be mapped to their respective question entries with valid regions.
+- FLEXIBLE LABEL MATCHING: Students write labels in many formats: "Q1 A", "Q1A", "Q1 A - <Title>", "Q1(a)", "Q1.A", "1A", "1(a)", "Ans 1A". All of these MUST match the question with id "1a". Ignore spaces, hyphens, and title text following the question tag.
 - Locate which region(s) of the answer sheet correspond to each question.
 - Transcribe the answer as best you can (handwriting may be imperfect — do your best).
 - An answer may span multiple pages — include one region per contiguous block, across as many pages as needed.
@@ -93,9 +95,9 @@ STEP 2 — Extract the student's answers from the answer sheet.
 BOUNDING BOX RULES — read carefully, this is the most important part of your job:
 - A bounding box must be a TIGHT, MINIMAL rectangle around ONLY the ink that answers this specific question/sub-part — nothing else.
 - NEVER return a box that spans the full page width or the full page height just because the answer is long. If the answer fills most of a page, the box should still stop exactly where the handwritten ink for THIS question starts and ends — not at the page edges/margins.
-- If a page contains more than one question's content (e.g. Q3(a) and Q3(b) both appear on the same page), each question gets its OWN box that stops exactly where that question's content ends and the next one begins. Boxes for different questions must never overlap, and must never include so much as one line that belongs to a different question.
+- If a page contains more than one question's content (e.g. Q1A and Q1B both appear on the same page), each question gets its OWN box that stops exactly where that question's content ends and the next one begins. Boxes for different questions must never overlap, and must never include so much as one line that belongs to a different question.
 - When a question has labelled sub-parts sharing one page (e.g. "Q3" as a shared title, then "A) ..." and "B) ..." below it), the shared parent title/heading (e.g. "Q3 — Least-squares line and Decision Tree versus KNN") belongs to NEITHER sub-part specifically — exclude it from both 3(a)'s and 3(b)'s boxes. Each sub-part's box should start at its own "A)"/"B)" sub-heading (or the first line of its actual content if unlabeled), not at the shared parent title above it.
-- EXCLUDE QUESTIONS WRITTEN ON THE ANSWER SHEET: Students often copy the printed question onto their answer sheet (e.g., "Q7 A - Explain hard voting..."). You MUST NOT include these copied question lines in the bounding box.
+- EXCLUDE QUESTIONS WRITTEN ON THE ANSWER SHEET: Students often copy the printed question onto their answer sheet (e.g., "Q1 A - Explain Reinforcement Learning..."). You MUST NOT include these copied question lines in the bounding box.
 - START THE BOX AT THE ANSWER: The bounding box must begin AT the word "Ans:", "Answer:", or the very first line of the actual student's answer text. Do NOT start the box at the copied question text above it.
 - Exclude from every box: page headers/footers, subject/roll-number lines, ruled margins, the printed or handwritten question text, the printed question-number tag itself if it is a separate printed label, and any blank space beyond the last line of ink.
 - If a single question's answer is broken up on the page by something else in between (a diagram for a different question, a page break, a section divider), split it into multiple smaller regions rather than one box that swallows everything in between.
