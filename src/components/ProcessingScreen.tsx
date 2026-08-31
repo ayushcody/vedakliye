@@ -23,11 +23,15 @@ const steps = [
   }
 ];
 
+interface ProcessingScreenProps {
+  stepIndex: number;
+  onBack?: () => void;
+}
+
 export default function ProcessingScreen({
   stepIndex,
-}: {
-  stepIndex: number;
-}) {
+  onBack,
+}: ProcessingScreenProps) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
@@ -48,7 +52,7 @@ export default function ProcessingScreen({
       <div className="relative flex min-h-full h-auto md:h-full w-full max-w-[1920px] gap-4 overflow-y-auto md:overflow-hidden rounded-[24px] sm:rounded-[32px] bg-[#f4f6f8] p-3 sm:p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <TopBar />
+          <TopBar onBack={onBack} />
 
           <div className="relative z-10 flex flex-1 justify-center overflow-y-auto py-4 sm:py-8">
             <div className="my-auto flex w-full max-w-lg flex-col items-center gap-6 sm:gap-8 pb-8 px-2 sm:px-0">

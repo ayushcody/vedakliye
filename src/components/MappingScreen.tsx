@@ -11,9 +11,10 @@ interface MappingScreenProps {
   result: ExtractionResult;
   answerSheetPages: PageImage[];
   processingDurationMs?: number;
+  onBack?: () => void;
 }
 
-export default function MappingScreen({ result, answerSheetPages, processingDurationMs }: MappingScreenProps) {
+export default function MappingScreen({ result, answerSheetPages, processingDurationMs, onBack }: MappingScreenProps) {
   const [selectedId, setSelectedId] = useState<string | null>(
     result.questions[0]?.id ?? null
   );
@@ -63,7 +64,7 @@ export default function MappingScreen({ result, answerSheetPages, processingDura
       <div className="relative flex min-h-full h-auto lg:h-full w-full max-w-[1920px] gap-4 overflow-y-auto lg:overflow-hidden rounded-[24px] sm:rounded-[32px] bg-[#f4f6f8] p-3 sm:p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <TopBar processingDurationMs={processingDurationMs} />
+          <TopBar processingDurationMs={processingDurationMs} onBack={onBack} />
 
           {/* Mobile Tab Switcher */}
           <div className="flex lg:hidden w-full items-center justify-center rounded-2xl bg-white p-1 shadow-sm border border-black/5">

@@ -5,12 +5,21 @@ import AboutModal from "./AboutModal";
 
 interface TopBarProps {
   processingDurationMs?: number;
+  onBack?: () => void;
 }
 
-export default function TopBar({ processingDurationMs }: TopBarProps = {}) {
+export default function TopBar({ processingDurationMs, onBack }: TopBarProps = {}) {
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else if (typeof window !== "undefined" && window.history.length > 1) {
+      window.history.back();
+    }
+  };
 
   const formatDuration = (ms?: number) => {
     if (!ms) return null;
@@ -26,6 +35,7 @@ export default function TopBar({ processingDurationMs }: TopBarProps = {}) {
       <div className="flex items-center gap-2">
         {/* Back Button - Minimum 44x44px touch target */}
         <button 
+          onClick={handleBack}
           aria-label="Go back"
           className="flex min-w-[44px] min-h-[44px] items-center justify-center rounded-full text-[#303030] hover:bg-black/5 transition-colors cursor-pointer"
         >

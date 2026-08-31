@@ -113,12 +113,16 @@ export default function Home() {
     }
   }
 
+  const handleBackToUpload = () => {
+    setView("upload");
+  };
+
   if (view === "upload") {
-    return <UploadScreen onStart={handleStart} />;
+    return <UploadScreen onStart={handleStart} onBack={handleBackToUpload} />;
   }
 
   if (view === "processing") {
-    return <ProcessingScreen stepIndex={stepIndex} />;
+    return <ProcessingScreen stepIndex={stepIndex} onBack={handleBackToUpload} />;
   }
 
   if (view === "error") {
@@ -197,7 +201,7 @@ export default function Home() {
   }
 
   if (view === "mapping" && result) {
-    return <MappingScreen result={result} answerSheetPages={answerSheetPages} processingDurationMs={processingDurationMs ?? undefined} />;
+    return <MappingScreen result={result} answerSheetPages={answerSheetPages} processingDurationMs={processingDurationMs ?? undefined} onBack={handleBackToUpload} />;
   }
 
   return null;

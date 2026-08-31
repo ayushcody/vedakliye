@@ -6,6 +6,7 @@ import Sidebar from "./Sidebar";
 
 interface UploadScreenProps {
   onStart: (questionPaper: File, answerSheet: File) => void;
+  onBack?: () => void;
 }
 
 function UploadSlot({
@@ -114,7 +115,7 @@ function UploadSlot({
   );
 }
 
-export default function UploadScreen({ onStart }: UploadScreenProps) {
+export default function UploadScreen({ onStart, onBack }: UploadScreenProps) {
   const [questionPaper, setQuestionPaper] = useState<File | null>(null);
   const [answerSheet, setAnswerSheet] = useState<File | null>(null);
   const [aiEngine, setAiEngine] = useState<"gemini" | "mistral">("gemini");
@@ -159,7 +160,7 @@ export default function UploadScreen({ onStart }: UploadScreenProps) {
 
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col gap-4">
-        <TopBar />
+        <TopBar onBack={onBack} />
 
         <div className="relative z-10 flex flex-1 items-center justify-center py-2 overflow-y-auto min-h-0">
           <div className="flex w-full max-w-[1103px] flex-col items-center gap-2 sm:gap-4 rounded-[40px] my-auto">
