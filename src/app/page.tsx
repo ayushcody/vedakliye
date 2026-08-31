@@ -42,6 +42,7 @@ export default function Home() {
       
       setStepIndex(2);
       const aiEngine = localStorage.getItem("ai_engine") || "gemini";
+      const userApiKey = (aiEngine === "mistral" ? localStorage.getItem("mistral_key") : localStorage.getItem("gemini_key")) || undefined;
       const engineName = aiEngine === "mistral" ? "Mistral AI" : "Google Gemini";
       setProgressMessage(`Mapping answers to questions via ${engineName}...`);
       setProgressPercentage(55);
@@ -51,6 +52,7 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           engine: aiEngine,
+          apiKey: userApiKey,
           questionPaperPages: questionPages.map((p) => p.dataUrl),
           answerSheetPages: answerPages.map((p) => p.dataUrl),
         }),

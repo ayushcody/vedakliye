@@ -91,11 +91,12 @@ IMPORTANT: You MUST return your response as a valid JSON object matching the fol
 export async function extractAndGradeMistral(
   questionPaperPages: string[],
   answerSheetPages: string[],
-  onProgress?: (step: number, message: string) => void
+  onProgress?: (step: number, message: string) => void,
+  customApiKey?: string
 ): Promise<ExtractionResult> {
-  const apiKey = process.env.MISTRAL_API_KEY;
+  const apiKey = customApiKey || process.env.MISTRAL_API_KEY;
   if (!apiKey) {
-    throw new Error("MISTRAL_API_KEY is not configured.");
+    throw new Error("MISTRAL_API_KEY is not configured. Please add it to your environment or enter your key in Settings.");
   }
 
   const client = new Mistral({ apiKey });
@@ -231,6 +232,7 @@ export async function extractAndGradeMistral(
     console.log(`[MISTRAL MAPPING] Batch: ${batchIdx + 1}/${asBatches.length} Pages: ${batchAsResults.length} Characters: ${payloadCharCount} Estimated tokens: ${Math.round(payloadCharCount / 4)}`);
     
     let attempt = 0;
+    let useFallbackModel = false;
     const maxRetries = 8;
     let res: any;
     let lastStatus = null;
@@ -239,7 +241,7 @@ export async function extractAndGradeMistral(
     const batchStartTime = Date.now();
     while (attempt < maxRetries) {
       attempt++;
-      const currentModel = attempt > 2 ? FALLBACK_LLM_MODEL : PRIMARY_LLM_MODEL;
+      const currentModel = (useFallbackModel || attempt > 1) ? FALLBACK_LLM_MODEL : PRIMARY_LLM_MODEL;
       try {
         res = await client.chat.complete({
           model: currentModel,
@@ -257,7 +259,10 @@ export async function extractAndGradeMistral(
         lastStatus = error.statusCode || error.status || "UNKNOWN";
         lastErrorMessage = error.message || String(error);
         
-        const isTierError = lastStatus === 403 || lastErrorMessage.includes("tier_not_allowed") || lastErrorMessage.includes("not available in your subscription tier");
+        const isTierError = lastStatus === 403 || lastErrorMessage.includes("tier_not_allowed") || lastErrorMessage.includes("not available in your subscription tier") || lastErrorMessage.includes("403");
+        if (isTierError) {
+          useFallbackModel = true;
+        }
         const isTransient = isTierError || lastStatus === 429 || lastStatus === 503 || lastStatus === 504 || (typeof lastStatus === 'number' && lastStatus >= 500) || lastErrorMessage.includes('fetch failed') || lastErrorMessage.includes('ETIMEDOUT') || lastErrorMessage.toLowerCase().includes('timeout') || error.code === 'ETIMEDOUT' || error.cause?.code === 'ETIMEDOUT';
         
         if (isTransient && attempt < maxRetries) {
@@ -265,7 +270,7 @@ export async function extractAndGradeMistral(
           const waitTime = isTierError ? 500 : (lastStatus === 429 
             ? Math.min(60000, (attempt * 15000) + jitter)
             : (Math.pow(2, attempt) * 1000) + jitter);
-          console.log(`[MISTRAL LLM] ${isTierError ? "Subscription Tier Error (403)" : "Transient error"} on mapping batch ${batchIdx + 1}. Switching/Waiting ${(waitTime/1000).toFixed(1)}s (Attempt ${attempt}/${maxRetries}, trying fallback model: ${FALLBACK_LLM_MODEL})...`);
+          console.log(`[MISTRAL LLM] ${isTierError ? "Subscription Tier Error (403)" : "Transient error"} on mapping batch ${batchIdx + 1}. Switching to fallback model: ${FALLBACK_LLM_MODEL} (Attempt ${attempt}/${maxRetries}, waiting ${(waitTime/1000).toFixed(1)}s)...`);
           await new Promise(resolve => setTimeout(resolve, waitTime));
         } else if (!isTransient || attempt >= maxRetries) {
           throw new Error(`MISTRAL_LLM_TRANSIENT_FAILURE - Batch: ${batchIdx + 1}/${asBatches.length}, Final Status: ${lastStatus}, Retries: ${attempt}, Error: ${lastErrorMessage}`);

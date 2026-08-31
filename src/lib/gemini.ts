@@ -3,11 +3,11 @@ import type { ExtractionResult } from "./types";
 
 const MODEL_NAME = "gemini-3.6-flash";
 
-function getClient() {
-  const apiKey = process.env.GEMINI_API_KEY;
+function getClient(customApiKey?: string) {
+  const apiKey = customApiKey || process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error(
-      "GEMINI_API_KEY is not set. Add it to your environment (see .env.example)."
+      "GEMINI_API_KEY is not set. Add it to your environment or enter your key in Settings."
     );
   }
   return new GoogleGenerativeAI(apiKey);
@@ -133,9 +133,10 @@ function dataUrlToInlinePart(dataUrl: string) {
 
 export async function extractAndGrade(
   questionPaperPages: string[],
-  answerSheetPages: string[]
+  answerSheetPages: string[],
+  customApiKey?: string
 ): Promise<ExtractionResult> {
-  const genAI = getClient();
+  const genAI = getClient(customApiKey);
   const model = genAI.getGenerativeModel({
     model: MODEL_NAME,
     generationConfig: {

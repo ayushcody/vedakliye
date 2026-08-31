@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       }
 
       try {
-        const body = (await req.json()) as ProcessRequestBody & { engine?: "gemini" | "mistral" };
+        const body = (await req.json()) as ProcessRequestBody & { engine?: "gemini" | "mistral"; apiKey?: string };
 
         if (!body.questionPaperPages?.length || !body.answerSheetPages?.length) {
           throw new Error("Both questionPaperPages and answerSheetPages are required.");
@@ -30,14 +30,16 @@ export async function POST(req: NextRequest) {
           result = await extractAndGradeMistral(
             body.questionPaperPages,
             body.answerSheetPages,
-            reportProgress
+            reportProgress,
+            body.apiKey
           );
         } else {
           // gemini doesn't have onProgress yet, just call it
           reportProgress(0, "Initializing Gemini engine...");
           result = await extractAndGrade(
             body.questionPaperPages,
-            body.answerSheetPages
+            body.answerSheetPages,
+            body.apiKey
           );
         }
 
