@@ -87,7 +87,8 @@ STEP 1 — Extract every question from the question paper, in the correct printe
 
 STEP 2 — Extract and map EVERY student answer from the answer sheet from top to bottom on every page.
 - EXHAUSTIVE COVERAGE: Scan every page from the very top line to the bottom. NEVER skip the first question at the top of a page (e.g. "Q1 A" at top of page). If a page has Q1 A, Q1 B, Q1 C, ALL of them MUST be mapped to their respective question entries with valid regions.
-- FLEXIBLE LABEL MATCHING: Students write labels in many formats: "Q1 A", "Q1A", "Q1 A - <Title>", "Q1(a)", "Q1.A", "1A", "1(a)", "Ans 1A". All of these MUST match the question with id "1a". Ignore spaces, hyphens, and title text following the question tag.
+- FLEXIBLE LABEL MATCHING: Students write labels in many formats: "Q1 A", "Q1A", "Q1 A - <Title>", "Q1(a)", "Q1.A", "1A", "1(a)", "Ans 1A", "① (a)", "② Q2". All of these MUST match the question with id "1a". Ignore spaces, hyphens, and title text following the question tag.
+- MICRO ANSWERS: Students often write very short, one-word answers (e.g., "1(a) chloroplast" or "Q2 ARTERY"). Do NOT skip these. Every micro answer MUST be extracted, transcribed, and mapped to its respective question, even if it is just a single word.
 - Locate which region(s) of the answer sheet correspond to each question.
 - Transcribe the answer as best you can (handwriting may be imperfect — do your best).
 - An answer may span multiple pages — include one region per contiguous block, across as many pages as needed.
